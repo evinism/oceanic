@@ -1,62 +1,67 @@
-import {DomalNode, DomalElementNode, Optional, DomRepresentedProp} from './types';
+import {DomalNode, DomalElementNode, Optional, ElementChild, BaseProps, BasicElementProps, PermissiveOptional} from './types';
 
-
-const domRepresentedPropNames: DomRepresentedProp[] = ['id', 'class', 'value', 'checked', 'selected', 'disabled', 'readonly', 'hidden', 'tabindex'];
-type BasicElementProps = { [key in DomRepresentedProp]?: string | boolean | number };
-
-type Child = DomalNode | (() => DomalNode);
-type Args<PropTypes> = [] | [Child[] | undefined | null] | [PropTypes | undefined | null, Child[] | undefined | null];
+type PermissiveChild = PermissiveOptional<ElementChild | DomalNode>;
+type PermissiveChildren = PermissiveOptional<PermissiveChild[] | PermissiveChild>;
+type Args<PropTypes> = [] | [PermissiveChildren] | [PropTypes | undefined | null, PermissiveChildren | undefined | null];
 
 function makeNullUndefined<T>(value: T | undefined | null): Optional<T> {
   return value === null ? undefined : value;
 }
 
-const basicElement = <PropTypes=BasicElementProps>(tagName: string) => (...args: Args<PropTypes>): DomalElementNode => {
+function unpermissifyChild(permissiveChild: PermissiveChild): Optional<ElementChild> {
+  if (typeof permissiveChild === 'function') {
+    return permissiveChild;
+  } else if(permissiveChild) {
+    const closedChild = permissiveChild;
+    return () => closedChild;
+  }
+  return undefined;
+}
+
+function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<ElementChild[]> {
+  const children: ElementChild[] = [];
+  if (!permissiveChildren) {
+    return undefined;
+  }
+  const maybePush = (permissiveChild: PermissiveChild) => {
+    const unpermissified = unpermissifyChild(permissiveChild);
+    if (unpermissified) {
+      children.push(unpermissified);
+    }
+  };
+
+  if (Array.isArray(permissiveChildren)) {
+    for (let child of permissiveChildren) {
+      maybePush(child);
+    }
+  } else {
+    maybePush(permissiveChildren);
+  }
+  return children;
+}
+
+
+const basicElement = <PropTypes extends BaseProps = BasicElementProps>(tag: string) => (...args: Args<PropTypes>): DomalElementNode => {
   let props: Optional<PropTypes>;
-  let children: Optional<Child[]>;
+  let children: Optional<ElementChild[]> = undefined;
   if (args.length === 0) {
     props = undefined;
     children = undefined;
   } else if (args.length === 1) {
     props = undefined;
-    children = makeNullUndefined(args[0]);
+    children = unpermissifyChildren(args[0]);
   } else {
     props = makeNullUndefined(args[0]);
-    children = makeNullUndefined(args[1]);
+    children = unpermissifyChildren(args[1]);
   }
-
-  const poppedProps = props || {};
-  let domRepresentedProps: DomalElementNode['domRepresentedProps'] = {};
-  let jsAssignedProps: DomalElementNode['jsAssignedProps'] = {};
-  for (let propName in poppedProps){
-    if (domRepresentedPropNames.indexOf(propName as DomRepresentedProp) !== -1) {
-      domRepresentedProps[propName as DomRepresentedProp] = (poppedProps as any)[propName];
-    } else {
-      jsAssignedProps[propName] = (poppedProps as any)[propName];
-    }
-  }
-
-  for (let propName of domRepresentedPropNames) {
-    if (props && (props as any)[propName]) {
-      domRepresentedProps[propName] = (props as any)[propName];
-    }
-  }
-
-  const fullyRenderedChildren = children ? children.map(child => {
-    if (typeof child === 'function') {
-      return child();
-    } else {
-      return child;
-    }
-  }) : undefined;
-
+  const key = (props && props.key) || '';
   return {
     _domal: true,
     type: 'element',
-    tag: tagName,
-    children: fullyRenderedChildren,
-    domRepresentedProps: domRepresentedProps,
-    jsAssignedProps: {},
+    tag,
+    children, 
+    key,
+    props: props || {},
   };
 };
 
@@ -74,6 +79,7 @@ export const ul = basicElement('ul');
 export const ol = basicElement('ol');
 export const li = basicElement('li');
 export const img = basicElement('img');
+export const br = basicElement('br');
 
 
 

@@ -14,7 +14,9 @@ describe('domal', () => {
     });
 
     it('should return a string with a tag', () => {
-      assert(renderToText(div([])) === '<div></div>');
+      const actual = renderToText(div([]));
+      const expected = html('<div></div>');
+      expect(actual).toBe(expected);
     });
 
     it('should handle child elements', () => {
@@ -31,7 +33,7 @@ describe('domal', () => {
           hi
         </div>
       `);
-      assert(actual === expected);
+      expect(actual).toBe(expected);
     });
 
     it('should handle child elements with props', () => {
@@ -48,7 +50,7 @@ describe('domal', () => {
           hi
         </div>
       `);
-      assert(actual === expected);
+      expect(actual).toBe(expected);
     });
   });
 
@@ -56,7 +58,13 @@ describe('domal', () => {
     it("should render to an element", () => {
       const element = document.createElement('div');
       render(span([]), element);
-      assert(element.innerHTML === '<span></span>');
+      expect(element.innerHTML).toBe('<span></span>');
+    });
+
+    it("should allow bare elements as children", () => {
+      const element = document.createElement('div');
+      render(div({id: 1}, span('hello')), element);
+      expect(element.innerHTML).toBe('<div id="1"><span>hello</span></div>');
     });
   });
 });

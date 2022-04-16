@@ -1,0 +1,43 @@
+export * from './elements';
+import { DomalNode, DomRepresentedProp } from './types';
+export { DomalNode } from './types';
+
+export function renderToText(node: (() => DomalNode) | DomalNode): string {
+  const domRepresentedProps = ['id', 'class', 'value', 'checked', 'selected', 'disabled', 'readonly', 'hidden', 'tabindex'];
+
+  function renderAttrValue(value: boolean | number | string ){
+    return typeof value === 'string' ? `"${value}"` : value;
+  }
+
+  function renderNode(node: DomalNode){
+    let html = '';
+    if (typeof node === 'string') {
+      html += node;
+    } else {
+      html = `<${node.tag}`;
+      for (let key in node.props) {
+        if (domRepresentedProps.indexOf(key) !== -1) {
+          const value = node.props[key as DomRepresentedProp];
+          if (value !== undefined) {
+            html += ` ${key}=${renderAttrValue(value)}`;
+          }
+        }
+      }
+      if (node.children) {
+        html += '>';
+        for (let child of node.children) {
+          html += renderNode(child());
+        }
+        html += `</${node.tag}>`;
+      } else {
+        html += '/>';
+      }
+    }
+    return html;
+  }
+  if (typeof node === 'function') {
+    return renderNode(node());
+  } else {
+    return renderNode(node);
+  }
+}
