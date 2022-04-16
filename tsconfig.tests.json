@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es2015",
+    "declaration": true,
+    "outDir": "./dist/esm",
+    "esModuleInterop": true,
+    "strict": true,
+    "types": [
+      "@types/jest",
+      "node"
+    ],
+    "moduleResolution": "node"
+  },
+  "include": [
+    "src/**/*"
+  ]
+}

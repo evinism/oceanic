@@ -1,0 +1,48 @@
+{
+  "name": "domal",
+  "version": "0.0.1",
+  "description": "Small but mighty UI library",
+  "author": "Evin Sellin",
+  "license": "MIT",
+  "main": "dist/umd/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "files": [
+    "dist",
+    "bin"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/umd/index.js",
+      "default": "./dist/esm/index.js"
+    }
+  },
+  "scripts": {
+    "build": "rm -rf dist/ && tsc && rollup --config rollup.config.js",
+    "test": "jest",
+    "bundlesize": "npm run build && echo \"Bundle Size (bytes):\" $(gzip -c ./dist/umd/index.js | wc -c)",
+    "prepare": "npm run build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.9",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/preset-typescript": "^7.16.7",
+    "@rollup/plugin-commonjs": "^20.0.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "@testing-library/jest-dom": "^5.16.4",
+    "@types/expect": "^24.3.0",
+    "@types/jest": "^27.4.1",
+    "@types/mocha": "^8.0.0",
+    "babel-jest": "^27.5.1",
+    "jest": "^27.5.1",
+    "rollup": "^2.56.3",
+    "rollup-plugin-analyzer": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.7.0",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "incremental-dom": "^0.7.0"
+  }
+}
