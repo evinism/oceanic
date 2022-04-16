@@ -9,13 +9,17 @@ export type BasicElementProps =  {
   [key in DomRepresentedProp]?: string | boolean | number;
 } & BaseProps;
 
-export type ElementChild = () => DomalNode;
+interface DomalConstructorArguments {
+  rerender: () => void;
+}
+
+export type DomalNodeConstructor = (args: DomalConstructorArguments) => DomalNode;
 
 export type DomalElementNode = {
   _domal: true,
   type: "element",
   tag: string;
-  children: Optional<(ElementChild)[]>;
+  children: Optional<(DomalNodeConstructor)[]>;
   key: string,
   props: { [key: string]: any };
 }

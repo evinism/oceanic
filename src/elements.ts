@@ -1,6 +1,6 @@
-import {DomalNode, DomalElementNode, Optional, ElementChild, BaseProps, BasicElementProps, PermissiveOptional} from './types';
+import {DomalNode, DomalElementNode, Optional, DomalNodeConstructor, BaseProps, BasicElementProps, PermissiveOptional} from './types';
 
-type PermissiveChild = PermissiveOptional<ElementChild | DomalNode>;
+type PermissiveChild = PermissiveOptional<DomalNodeConstructor | DomalNode>;
 type PermissiveChildren = PermissiveOptional<PermissiveChild[] | PermissiveChild>;
 type Args<PropTypes> = [] | [PermissiveChildren] | [PropTypes | undefined | null, PermissiveChildren | undefined | null];
 
@@ -8,7 +8,7 @@ function makeNullUndefined<T>(value: T | undefined | null): Optional<T> {
   return value === null ? undefined : value;
 }
 
-function unpermissifyChild(permissiveChild: PermissiveChild): Optional<ElementChild> {
+function unpermissifyChild(permissiveChild: PermissiveChild): Optional<DomalNodeConstructor> {
   if (typeof permissiveChild === 'function') {
     return permissiveChild;
   } else if(permissiveChild) {
@@ -18,8 +18,8 @@ function unpermissifyChild(permissiveChild: PermissiveChild): Optional<ElementCh
   return undefined;
 }
 
-function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<ElementChild[]> {
-  const children: ElementChild[] = [];
+function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<DomalNodeConstructor[]> {
+  const children: DomalNodeConstructor[] = [];
   if (!permissiveChildren) {
     return undefined;
   }
@@ -43,7 +43,7 @@ function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<
 
 const basicElement = <PropTypes extends BaseProps = BasicElementProps>(tag: string) => (...args: Args<PropTypes>): DomalElementNode => {
   let props: Optional<PropTypes>;
-  let children: Optional<ElementChild[]> = undefined;
+  let children: Optional<DomalNodeConstructor[]> = undefined;
   if (args.length === 0) {
     props = undefined;
     children = undefined;
@@ -80,6 +80,6 @@ export const ol = basicElement('ol');
 export const li = basicElement('li');
 export const img = basicElement('img');
 export const br = basicElement('br');
-
-
-
+export const hr = basicElement('hr');
+export const button = basicElement('button');
+export const input = basicElement('input');

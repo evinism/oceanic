@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {renderToText, render, div, span} from './domal';
+import {renderToText, render, div, span, button} from './domal';
 
 const html = (data: string) => data
   .trim()
@@ -65,6 +65,36 @@ describe('domal', () => {
       const element = document.createElement('div');
       render(div({id: 1}, span('hello')), element);
       expect(element.innerHTML).toBe('<div id="1"><span>hello</span></div>');
+    });
+
+    it("should allow manual rerenders", () => {
+      const element = document.createElement('div');
+      let count = 0;
+
+      const node = div(span(() => `${count}`));
+      render(node, element);
+      expect(element.innerHTML).toBe('<div><span>0</span></div>');
+
+      count++;
+      render(node, element);
+      expect(element.innerHTML).toBe('<div><span>1</span></div>');
+    });
+
+    it("should allow dynamic rerenders from internal rerenders", () => {
+      const element = document.createElement('div');
+
+      let count = 0;
+      let rerenderFn: any;
+      const node = div(span(({rerender}) => {
+        rerenderFn = rerender;
+        return `${count}`;
+      }));
+
+      render(node, element);
+      expect(element.innerHTML).toBe('<div><span>0</span></div>');
+      count++;
+      rerenderFn();
+      expect(element.innerHTML).toBe('<div><span>1</span></div>');
     });
   });
 });

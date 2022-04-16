@@ -1,29 +1,17 @@
-import { DomalNode } from './types';
-import { patch, text, elementOpen, elementClose, elementVoid } from 'incremental-dom';
+import { DomalNode, DomalNodeConstructor } from './types';
+import { RenderContext } from './renderContext';
 
-export function render(node: DomalNode | (() => DomalNode), element: HTMLElement) {
-  function renderNode(node: DomalNode){
-    if (typeof node === 'string') {
-      text(node);
-    } else {
-      const props = Object.entries(node.props).flat();
-      if (node.children) {
-        elementOpen(node.tag, node.key, [], ...props);
-        for (let child of node.children) {
-          renderNode(child());
-        }
-        elementClose(node.tag);
-      } else {
-        elementVoid(node.tag, node.key, null, props);
-      }
-    }
+const activeRenderContexts = new Map<Element, RenderContext>();
+
+export function render(node: DomalNode | DomalNodeConstructor, element: Element) {
+  const nodeConstructor = typeof node === 'function' ? node : () => node;
+  const renderContext = activeRenderContexts.get(element);
+  if (renderContext) {
+    renderContext.rootNode = nodeConstructor;
+    renderContext.render();
+  } else {
+    const newRenderContext = new RenderContext(element, nodeConstructor);
+    activeRenderContexts.set(element, newRenderContext);
+    newRenderContext.render();
   }
-
-  patch(element, () => {
-    if (typeof node === 'function') {
-      renderNode(node());
-    } else {
-      renderNode(node);
-    }
-  });
 }
