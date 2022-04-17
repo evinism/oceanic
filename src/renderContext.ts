@@ -1,5 +1,5 @@
 import { BlorpNodeConstructor, UseStateHandler } from './types';
-import { patch, text, elementOpen, elementClose, elementVoid, currentElement } from 'incremental-dom';
+import { patch, text, elementOpen, elementClose, elementVoid, currentElement } from 'incremental-dom-evinism';
 import { attachHooks, detatchHooks } from './hooks';
 
 class HookDomain {

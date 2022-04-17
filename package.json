@@ -1,7 +1,7 @@
 {
-  "name": "blorp",
+  "name": "protoblorp",
   "version": "0.0.1",
-  "description": "Small but mighty UI library",
+  "description": "Small but mighty UI library. Proto version",
   "author": "Evin Sellin",
   "license": "MIT",
   "main": "dist/umd/index.js",
@@ -43,6 +43,6 @@
     "typescript": "^4.4.3"
   },
   "dependencies": {
-    "incremental-dom": "^0.7.0"
+    "incremental-dom-evinism": "^0.7.1"
   }
 }
