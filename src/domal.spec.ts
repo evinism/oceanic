@@ -1,5 +1,6 @@
 import assert from 'assert';
 import {renderToText, render, div, span, button} from './domal';
+import { useState } from './hooks';
 
 const html = (data: string) => data
   .trim()
@@ -95,6 +96,45 @@ describe('domal', () => {
       count++;
       rerenderFn();
       expect(element.innerHTML).toBe('<div><span>1</span></div>');
+    });
+
+    it("should allow basic useState calls", () => {
+      let outsideSetCount: any;
+      const element = document.createElement('div');
+      const node = div(() => {
+        const [count, setCount] = useState(0);
+        outsideSetCount = setCount;
+        return span(`${count}`);
+      });
+
+      render(node, element);
+      expect(element.innerHTML).toBe('<div><span>0</span></div>');
+      outsideSetCount(10);
+      expect(element.innerHTML).toBe('<div><span>10</span></div>');
+    });
+
+    it("should allow multiple useState calls", () => {
+      let outsideSetCount: any;
+      let outsideSetText: any;
+
+      const element = document.createElement('div');
+      const node = div(() => {
+        const [count, setCount] = useState(0);
+        const [text, setText] = useState("hello");
+        outsideSetCount = setCount;
+        outsideSetText = setText;
+        return span(`${count} ${text}`);
+      });
+
+      render(node, element);
+      expect(element.innerHTML).toBe('<div><span>0 hello</span></div>');
+      outsideSetCount(10);
+      expect(element.innerHTML).toBe('<div><span>10 hello</span></div>');
+      outsideSetText("world");
+      expect(element.innerHTML).toBe('<div><span>10 world</span></div>');
+      outsideSetCount(20);
+      expect(element.innerHTML).toBe('<div><span>20 world</span></div>');
+
     });
   });
 });

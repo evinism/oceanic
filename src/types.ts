@@ -28,3 +28,4 @@ export type DomalNode = DomalElementNode | string;
 
 export type Optional<T> = T | undefined;
 export type PermissiveOptional<T> = T | undefined | null | false;
+export type UseStateHandler<T> = (initialState: T) => [T, (newState: T) => void];

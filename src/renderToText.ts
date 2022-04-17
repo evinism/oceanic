@@ -26,7 +26,7 @@ export function renderToText(node: (() => DomalNode) | DomalNode): string {
       if (node.children) {
         html += '>';
         for (let child of node.children) {
-          html += renderNode(child());
+          html += renderNode(child({rerender: () => {}}));
         }
         html += `</${node.tag}>`;
       } else {
