@@ -1,8 +1,8 @@
-# Domal: Small yet Mighty DOM library
+# Blorp: Small yet Mighty DOM library
 
-## WARNING: domal hasn't yet actually been built. This is mostly speculative!
+## WARNING: blorp hasn't yet actually been built. This is mostly speculative!
 
-Domal aims to make it easy to build dynamic UIs without the need for fancy compilation.
+blorp aims to make it easy to build dynamic UIs without the need for fancy compilation.
 
 Think of it as a reduction of the best parts of React, without any magic!
 
@@ -10,7 +10,7 @@ Think of it as a reduction of the best parts of React, without any magic!
 // with html:
 // <body><div id="root"></div></body>
 
-import {div, p, render} from domal;
+import {div, p, render} from blorp;
 
 const component = div({class: "foo"},
   p("hello, world!")
@@ -19,10 +19,10 @@ const component = div({class: "foo"},
 render(component, document.body.root);
 ```
 
-Domal supports react-style hooks.
+blorp supports react-style hooks.
 
 ```js
-import {useState, div, render} from domal;
+import {useState, div, render} from blorp;
 
 const component = () => {
   const [isClicked, setIsClicked] = useState(false);
@@ -33,10 +33,10 @@ const component = () => {
 };
 ```
 
-Domal also supports nested hooks!
+blorp also supports nested hooks!
 
 ```js
-import {useState, div, h1, render} from domal;
+import {useState, div, h1, render} from blorp;
 
 const component = div([
   h1("Click below I guess!"),

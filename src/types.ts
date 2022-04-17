@@ -9,22 +9,22 @@ export type BasicElementProps =  {
   [key in DomRepresentedProp]?: string | boolean | number;
 } & BaseProps;
 
-interface DomalConstructorArguments {
+interface BlorpConstructorArguments {
   rerender: () => void;
 }
 
-export type DomalNodeConstructor = (args: DomalConstructorArguments) => DomalNode;
+export type BlorpNodeConstructor = (args: BlorpConstructorArguments) => BlorpNode;
 
-export type DomalElementNode = {
-  _domal: true,
+export type BlorpElementNode = {
+  _blorp: true,
   type: "element",
   tag: string;
-  children: Optional<(DomalNodeConstructor)[]>;
+  children: Optional<(BlorpNodeConstructor)[]>;
   key: string,
   props: { [key: string]: any };
 }
 
-export type DomalNode = DomalElementNode | string;
+export type BlorpNode = BlorpElementNode | string;
 
 export type Optional<T> = T | undefined;
 export type PermissiveOptional<T> = T | undefined | null | false;

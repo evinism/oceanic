@@ -1,15 +1,15 @@
 export * from './elements';
-import { DomalNode, DomRepresentedProp } from './types';
-export { DomalNode } from './types';
+import { BlorpNode, DomRepresentedProp } from './types';
+export { BlorpNode } from './types';
 
-export function renderToText(node: (() => DomalNode) | DomalNode): string {
+export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
   const domRepresentedProps = ['id', 'class', 'value', 'checked', 'selected', 'disabled', 'readonly', 'hidden', 'tabindex'];
 
   function renderAttrValue(value: boolean | number | string ){
     return typeof value === 'string' ? `"${value}"` : value;
   }
 
-  function renderNode(node: DomalNode){
+  function renderNode(node: BlorpNode){
     let html = '';
     if (typeof node === 'string') {
       html += node;

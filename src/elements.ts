@@ -1,6 +1,6 @@
-import {DomalNode, DomalElementNode, Optional, DomalNodeConstructor, BaseProps, BasicElementProps, PermissiveOptional} from './types';
+import {BlorpNode, BlorpElementNode, Optional, BlorpNodeConstructor, BaseProps, BasicElementProps, PermissiveOptional} from './types';
 
-type PermissiveChild = PermissiveOptional<DomalNodeConstructor | DomalNode>;
+type PermissiveChild = PermissiveOptional<BlorpNodeConstructor | BlorpNode>;
 type PermissiveChildren = PermissiveOptional<PermissiveChild[] | PermissiveChild>;
 type Args<PropTypes> = [] | [PermissiveChildren] | [PropTypes | undefined | null, PermissiveChildren | undefined | null];
 
@@ -8,7 +8,7 @@ function makeNullUndefined<T>(value: T | undefined | null): Optional<T> {
   return value === null ? undefined : value;
 }
 
-function unpermissifyChild(permissiveChild: PermissiveChild): Optional<DomalNodeConstructor> {
+function unpermissifyChild(permissiveChild: PermissiveChild): Optional<BlorpNodeConstructor> {
   if (typeof permissiveChild === 'function') {
     return permissiveChild;
   } else if(permissiveChild) {
@@ -18,8 +18,8 @@ function unpermissifyChild(permissiveChild: PermissiveChild): Optional<DomalNode
   return undefined;
 }
 
-function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<DomalNodeConstructor[]> {
-  const children: DomalNodeConstructor[] = [];
+function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<BlorpNodeConstructor[]> {
+  const children: BlorpNodeConstructor[] = [];
   if (!permissiveChildren) {
     return undefined;
   }
@@ -41,9 +41,9 @@ function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<
 }
 
 
-const basicElement = <PropTypes extends BaseProps = BasicElementProps>(tag: string) => (...args: Args<PropTypes>): DomalElementNode => {
+const basicElement = <PropTypes extends BaseProps = BasicElementProps>(tag: string) => (...args: Args<PropTypes>): BlorpElementNode => {
   let props: Optional<PropTypes>;
-  let children: Optional<DomalNodeConstructor[]> = undefined;
+  let children: Optional<BlorpNodeConstructor[]> = undefined;
   if (args.length === 0) {
     props = undefined;
     children = undefined;
@@ -56,7 +56,7 @@ const basicElement = <PropTypes extends BaseProps = BasicElementProps>(tag: stri
   }
   const key = (props && props.key) || '';
   return {
-    _domal: true,
+    _blorp: true,
     type: 'element',
     tag,
     children, 

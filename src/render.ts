@@ -1,9 +1,9 @@
-import { DomalNode, DomalNodeConstructor } from './types';
+import { BlorpNode, BlorpNodeConstructor } from './types';
 import { RenderContext } from './renderContext';
 
 const activeRenderContexts = new Map<Element, RenderContext>();
 
-export function render(node: DomalNode | DomalNodeConstructor, element: Element) {
+export function render(node: BlorpNode | BlorpNodeConstructor, element: Element) {
   const nodeConstructor = typeof node === 'function' ? node : () => node;
   const renderContext = activeRenderContexts.get(element);
   if (renderContext) {

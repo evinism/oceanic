@@ -1,1 +1,1 @@
-export * from './domal';
+export * from './blorp';

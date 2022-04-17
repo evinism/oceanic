@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {renderToText, render, div, span, button} from './domal';
+import {renderToText, render, div, span, button} from './blorp';
 import { useState } from './hooks';
 
 const html = (data: string) => data
@@ -8,7 +8,7 @@ const html = (data: string) => data
   .replace(/\s+</g, '<')
   .replace(/>\s+/g, '>');
 
-describe('domal', () => {
+describe('blorp', () => {
   describe('renderToText', () => {
     it('should return a string', () => {
       assert(typeof renderToText(div()) === 'string');
