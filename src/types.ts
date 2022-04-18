@@ -24,7 +24,14 @@ export type BlorpElementNode = {
   props: { [key: string]: any };
 }
 
-export type BlorpNode = BlorpElementNode | string;
+type BlorpFragmentNode = {
+  _blorp: true,
+  type: "fragment",
+  children: BlorpNodeConstructor[];
+  key: string;
+}
+
+export type BlorpNode = BlorpElementNode | BlorpFragmentNode | string;
 
 export type Optional<T> = T | undefined;
 export type PermissiveOptional<T> = T | undefined | null | false;

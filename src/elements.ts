@@ -41,7 +41,7 @@ function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<
 }
 
 
-const basicElement = <PropTypes extends BaseProps = BasicElementProps>(tag: string) => (...args: Args<PropTypes>): BlorpElementNode => {
+const basicElement = <PropTypes extends BaseProps = {[key: string]: any}>(tag: string) => (...args: Args<PropTypes>): BlorpElementNode => {
   let props: Optional<PropTypes>;
   let children: Optional<BlorpNodeConstructor[]> = undefined;
   if (args.length === 0) {
@@ -83,3 +83,10 @@ export const br = basicElement('br');
 export const hr = basicElement('hr');
 export const button = basicElement('button');
 export const input = basicElement('input');
+
+
+type FragArgs = [PermissiveChildren[]] | [string, PermissiveChildren[]];
+
+export const frag = (...args: FragArgs): BlorpNode => {
+
+}
