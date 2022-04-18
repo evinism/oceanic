@@ -24,7 +24,7 @@ export type BlorpElementNode = {
   props: { [key: string]: any };
 }
 
-type BlorpFragmentNode = {
+export type BlorpFragmentNode = {
   _blorp: true,
   type: "fragment",
   children: BlorpNodeConstructor[];

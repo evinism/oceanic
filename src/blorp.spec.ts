@@ -1,5 +1,6 @@
 import assert from 'assert';
 import {renderToText, render, div, span, button} from './blorp';
+import { frag } from './elements';
 import { useState } from './hooks';
 
 const html = (data: string) => data
@@ -53,6 +54,31 @@ describe('blorp', () => {
       `);
       expect(actual).toBe(expected);
     });
+
+    it('should handle frangments', () => {
+      const element = div({id: 'foo'}, [
+        frag([
+          div("one"),
+          span("two"),
+        ]),
+        frag([
+          div("three"),
+          span("four"),
+        ]),
+        "five"
+      ]);
+      const actual = renderToText(element);
+      const expected = html(`
+        <div id="foo">
+          <div>one</div>
+          <span>two</span>
+          <div>three</div>
+          <span>four</span>
+          five
+        </div>
+      `);
+      expect(actual).toBe(expected);
+    });
   });
 
   describe("render", () => {
@@ -66,6 +92,31 @@ describe('blorp', () => {
       const element = document.createElement('div');
       render(div({id: 1}, span('hello')), element);
       expect(element.innerHTML).toBe('<div id="1"><span>hello</span></div>');
+    });
+
+    it("should allow fragments", () => {
+      const element = document.createElement('div');
+      const def = div({id: 'foo'}, [
+        frag([
+          div("one"),
+          span("two"),
+        ]),
+        frag([
+          div("three"),
+          span("four"),
+        ]),
+        "five"
+      ]);
+      render(def, element);
+      expect(element.innerHTML).toBe(html(`
+       <div id="foo">
+          <div>one</div>
+          <span>two</span>
+          <div>three</div>
+          <span>four</span>
+          five
+        </div>`
+      ));
     });
 
     it("should allow manual rerenders", () => {

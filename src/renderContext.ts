@@ -2,7 +2,7 @@ import { BlorpNodeConstructor, UseStateHandler } from './types';
 import { patch, text, elementOpen, elementClose, elementVoid, currentElement } from 'incremental-dom-evinism';
 import { HookDomain } from './hookDomain';
 
-export class RenderContext {
+export class RenderTreeContext {
   rootElement: Element;
   rootNode: BlorpNodeConstructor;
 

@@ -13,6 +13,10 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
     let html = '';
     if (typeof node === 'string') {
       html += node;
+    } else if (node.type === 'fragment') {
+      for (let child of node.children) {
+        html += renderNode(child({rerender: () => {}}));
+      }
     } else {
       html = `<${node.tag}`;
       for (let key in node.props) {

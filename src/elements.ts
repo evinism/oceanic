@@ -1,4 +1,4 @@
-import {BlorpNode, BlorpElementNode, Optional, BlorpNodeConstructor, BaseProps, BasicElementProps, PermissiveOptional} from './types';
+import {BlorpNode, BlorpElementNode, Optional, BlorpNodeConstructor, BaseProps, BasicElementProps, PermissiveOptional, BlorpFragmentNode} from './types';
 
 type PermissiveChild = PermissiveOptional<BlorpNodeConstructor | BlorpNode>;
 type PermissiveChildren = PermissiveOptional<PermissiveChild[] | PermissiveChild>;
@@ -85,8 +85,21 @@ export const button = basicElement('button');
 export const input = basicElement('input');
 
 
-type FragArgs = [PermissiveChildren[]] | [string, PermissiveChildren[]];
+type FragArgs = [PermissiveChildren] | [string, PermissiveChildren];
 
-export const frag = (...args: FragArgs): BlorpNode => {
-
+export const frag = (...args: FragArgs): BlorpFragmentNode => {
+  let children: Optional<BlorpNodeConstructor[]> = undefined;
+  let key: string = '';
+if (args.length === 1) {
+    children = unpermissifyChildren(args[0]);
+  } else {
+    key = args[0];
+    children = unpermissifyChildren(args[1]);
+  }
+  return {
+    _blorp: true,
+    type: 'fragment',
+    children: children || [],
+    key,
+  };
 }
