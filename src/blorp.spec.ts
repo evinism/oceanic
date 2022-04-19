@@ -185,7 +185,116 @@ describe('blorp', () => {
       expect(element.innerHTML).toBe('<div><span>10 world</span></div>');
       outsideSetCount(20);
       expect(element.innerHTML).toBe('<div><span>20 world</span></div>');
+    });
 
+    it("should allow setState of two parallel components", () => {
+      let outsideSetCountOne: any;
+      let outsideSetCountTwo: any;
+
+      const element = document.createElement('div');
+      const node = div([
+        () => {
+          const [count, setCount] = useState(1);
+          outsideSetCountOne = setCount;
+          return span(`${count}`);
+        },
+        () => {
+          const [count, setCount] = useState(2);
+          outsideSetCountTwo = setCount;
+          return span(`${count}`);
+        }
+      ]);
+
+      render(node, element);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>1</span>
+          <span>2</span>
+        </div>
+      `));
+      outsideSetCountOne(10);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>10</span>
+          <span>2</span>
+        </div>
+      `));
+      outsideSetCountTwo(20);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>10</span>
+          <span>20</span>
+        </div>
+      `));
+      outsideSetCountOne(3);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>3</span>
+          <span>20</span>
+        </div>
+      `));
+    });
+
+    it("should allow setState of two parallel fragments", () => {
+      let outsideSetCountOne: any;
+      let outsideSetCountTwo: any;
+
+      const element = document.createElement('div');
+      const node = div([
+        () => {
+          const [count, setCount] = useState(1);
+          outsideSetCountOne = setCount;
+          return frag([
+            span(`${count} one`),
+            span(`${count} two`),
+          ]);
+        },
+        () => {
+          const [count, setCount] = useState(2);
+          outsideSetCountTwo = setCount;
+          return frag([
+            span(`${count} three`),
+            span(`${count} four`),
+          ]);
+        }
+      ]);
+
+      render(node, element);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>1 one</span>
+          <span>1 two</span>
+          <span>2 three</span>
+          <span>2 four</span>
+        </div>
+      `));
+      outsideSetCountOne(10);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>10 one</span>
+          <span>10 two</span>
+          <span>2 three</span>
+          <span>2 four</span>
+        </div>
+      `));
+      outsideSetCountTwo(20);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>10 one</span>
+          <span>10 two</span>
+          <span>20 three</span>
+          <span>20 four</span>
+        </div>
+      `));
+      outsideSetCountOne(3);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>3 one</span>
+          <span>3 two</span>
+          <span>20 three</span>
+          <span>20 four</span>
+        </div>
+      `));
     });
   });
 });
