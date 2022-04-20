@@ -1,10 +1,17 @@
-export type DomRepresentedProp = 'id' | 'class' | 'value' | 'checked' | 'selected' | 'disabled' | 'readonly' | 'hidden' | 'tabindex';
+export type DomRepresentedProp =
+  | "id"
+  | "class"
+  | "value"
+  | "checked"
+  | "selected"
+  | "disabled"
+  | "readonly"
+  | "hidden"
+  | "tabindex";
 
+export interface BaseProps {}
 
-export interface BaseProps {
-};
-
-export type BasicElementProps =  {
+export type BasicElementProps = {
   [key in DomRepresentedProp]?: string | boolean | number;
 } & BaseProps;
 
@@ -12,30 +19,37 @@ interface BlorpConstructorArguments {
   rerender: () => void;
 }
 
-export type BlorpNodeConstructor = ((args: BlorpConstructorArguments) => Optional<BlorpNode>) &
-  {
-    key?: string,
-  };
+export type BlorpNodeConstructor = ((
+  args: BlorpConstructorArguments
+) => Optional<BlorpNode>) & {
+  key?: string;
+};
 export type BlorpElementNode = {
-  _blorp: true,
-  type: "element",
+  _blorp: true;
+  type: "element";
   tag: string;
-  children: Optional<(BlorpNodeConstructor)[]>;
+  children: Optional<BlorpNodeConstructor[]>;
   props: { [key: string]: any };
-}
+};
 
 export type BlorpFragmentNode = {
-  _blorp: true,
-  type: "fragment",
+  _blorp: true;
+  type: "fragment";
   children: BlorpNodeConstructor[];
-}
+};
 
 export type BlorpNode = BlorpElementNode | BlorpFragmentNode | string;
 
 export type Optional<T> = T | undefined;
 export type PermissiveOptional<T> = T | undefined | null | false;
-export type UseStateHandler<T> = (initialState: T) => [T, (newState: T) => void];
+export type UseStateHandler<T> = (
+  initialState: T
+) => [T, (newState: T) => void];
 
 // For use with elements and helpers
-export type PermissiveChild = PermissiveOptional<BlorpNodeConstructor | BlorpNode>;
-export type PermissiveChildren = PermissiveOptional<PermissiveChild[] | PermissiveChild>;
+export type PermissiveChild = PermissiveOptional<
+  BlorpNodeConstructor | BlorpNode
+>;
+export type PermissiveChildren = PermissiveOptional<
+  PermissiveChild[] | PermissiveChild
+>;

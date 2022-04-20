@@ -4,24 +4,34 @@ import {
   Optional,
   BlorpNodeConstructor,
   PermissiveOptional,
-} from './types';
+} from "./types";
 
-export function permissiveOptionalToOptional<T>(permissiveOptional: PermissiveOptional<T>): Optional<T> {
-  if (permissiveOptional === null || permissiveOptional === undefined || permissiveOptional === false) {
+export function permissiveOptionalToOptional<T>(
+  permissiveOptional: PermissiveOptional<T>
+): Optional<T> {
+  if (
+    permissiveOptional === null ||
+    permissiveOptional === undefined ||
+    permissiveOptional === false
+  ) {
     return undefined;
   }
   return permissiveOptional;
 }
 
-export function unpermissifyChild(permissiveChild: PermissiveChild): BlorpNodeConstructor {
-  if (typeof permissiveChild === 'function') {
+export function unpermissifyChild(
+  permissiveChild: PermissiveChild
+): BlorpNodeConstructor {
+  if (typeof permissiveChild === "function") {
     return permissiveChild;
   }
   const closedChild = permissiveChild;
   return () => permissiveOptionalToOptional(closedChild);
 }
 
-export function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<BlorpNodeConstructor[]> {
+export function unpermissifyChildren(
+  permissiveChildren: PermissiveChildren
+): Optional<BlorpNodeConstructor[]> {
   const children: BlorpNodeConstructor[] = [];
   if (!permissiveChildren) {
     return undefined;

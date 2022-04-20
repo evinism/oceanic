@@ -1,14 +1,14 @@
-import { attachHooks, detatchHooks } from './hooks';
-import { UseStateHandler } from './types';
+import { attachHooks, detatchHooks } from "./hooks";
+import { UseStateHandler } from "./types";
 
 export class HookDomain {
   _recording: boolean;
   _isAttached: boolean;
   _state: any[];
-  _hookOrder: 'useState'[];
+  _hookOrder: "useState"[];
   _position: number | undefined;
 
-  constructor(){
+  constructor() {
     this._recording = true;
     this._isAttached = false;
     this._state = [];
@@ -19,7 +19,7 @@ export class HookDomain {
   enter = (rerender: () => void) => {
     this._position = 0;
     if (this._isAttached) {
-      throw new Error('Hooks are already attached!');
+      throw new Error("Hooks are already attached!");
     }
     this._isAttached = true;
 
@@ -30,10 +30,10 @@ export class HookDomain {
       console.log("useStateHandler called: ", hookIndex);
 
       if (this._recording) {
-        this._hookOrder[hookIndex] = 'useState';
+        this._hookOrder[hookIndex] = "useState";
         this._state[hookIndex] = initialState;
-      } else if (this._hookOrder[hookIndex] !== 'useState') {
-          throw new Error('useState hook is not in the right position!');
+      } else if (this._hookOrder[hookIndex] !== "useState") {
+        throw new Error("useState hook is not in the right position!");
       }
 
       const state = this._state[hookIndex];
@@ -41,20 +41,20 @@ export class HookDomain {
       const setState = (newState: any) => {
         this._state[hookIndex] = newState;
         rerender();
-      }
+      };
       return [state, setState];
     };
 
     attachHooks({ useStateHandler });
   };
 
-  exit = () =>{
+  exit = () => {
     if (!this._isAttached) {
-      throw new Error('Hooks are not yet attached!');
+      throw new Error("Hooks are not yet attached!");
     }
 
     if (this._position !== this._hookOrder.length) {
-        throw new Error('Hooks are not in the right position!');
+      throw new Error("Hooks are not in the right position!");
     }
 
     detatchHooks();
@@ -62,4 +62,4 @@ export class HookDomain {
     this._isAttached = false;
     this._position = undefined;
   };
-};
+}

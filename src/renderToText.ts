@@ -1,21 +1,31 @@
-export * from './elements';
-import { BlorpNode, DomRepresentedProp } from './types';
-export { BlorpNode } from './types';
+export * from "./elements";
+import { BlorpNode, DomRepresentedProp } from "./types";
+export { BlorpNode } from "./types";
 
 export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
-  const domRepresentedProps = ['id', 'class', 'value', 'checked', 'selected', 'disabled', 'readonly', 'hidden', 'tabindex'];
+  const domRepresentedProps = [
+    "id",
+    "class",
+    "value",
+    "checked",
+    "selected",
+    "disabled",
+    "readonly",
+    "hidden",
+    "tabindex",
+  ];
 
-  function renderAttrValue(value: boolean | number | string ){
-    return typeof value === 'string' ? `"${value}"` : value;
+  function renderAttrValue(value: boolean | number | string) {
+    return typeof value === "string" ? `"${value}"` : value;
   }
 
-  function renderNode(node: BlorpNode){
-    let html = '';
-    if (typeof node === 'string') {
+  function renderNode(node: BlorpNode) {
+    let html = "";
+    if (typeof node === "string") {
       html += node;
-    } else if (node.type === 'fragment') {
+    } else if (node.type === "fragment") {
       for (let child of node.children) {
-        const childNode = child({rerender: () => {}});
+        const childNode = child({ rerender: () => {} });
         if (childNode) {
           html += renderNode(childNode);
         }
@@ -31,21 +41,21 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
         }
       }
       if (node.children) {
-        html += '>';
+        html += ">";
         for (let child of node.children) {
-          const childNode = child({rerender: () => {}});
+          const childNode = child({ rerender: () => {} });
           if (childNode) {
             html += renderNode(childNode);
           }
         }
         html += `</${node.tag}>`;
       } else {
-        html += '/>';
+        html += "/>";
       }
     }
     return html;
   }
-  if (typeof node === 'function') {
+  if (typeof node === "function") {
     return renderNode(node());
   } else {
     return renderNode(node);

@@ -1,6 +1,13 @@
-import { BlorpNodeConstructor, Optional, UseStateHandler } from './types';
-import { patch, text, elementOpen, elementClose, elementVoid, currentElement } from 'incremental-dom-evinism';
-import { HookDomain } from './hookDomain';
+import { BlorpNodeConstructor, Optional, UseStateHandler } from "./types";
+import {
+  patch,
+  text,
+  elementOpen,
+  elementClose,
+  elementVoid,
+  currentElement,
+} from "incremental-dom-evinism";
+import { HookDomain } from "./hookDomain";
 
 type RenderContext = {
   hookDomain: HookDomain;
@@ -23,8 +30,11 @@ export class RenderTreeContext {
     };
   }
 
-  _renderNodeChildren(children: BlorpNodeConstructor[], renderContext: RenderContext) {
-    for (let i = 0;  i < children.length; i++) {
+  _renderNodeChildren(
+    children: BlorpNodeConstructor[],
+    renderContext: RenderContext
+  ) {
+    for (let i = 0; i < children.length; i++) {
       const child = children[i];
       if (!renderContext.childrenContexts[i]) {
         let newRenderContext: RenderContext = {
@@ -38,7 +48,10 @@ export class RenderTreeContext {
     }
   }
 
-  _renderNode = (nodeConstructor: BlorpNodeConstructor, renderContext: RenderContext) => {
+  _renderNode = (
+    nodeConstructor: BlorpNodeConstructor,
+    renderContext: RenderContext
+  ) => {
     const hookDomain = renderContext.hookDomain;
 
     hookDomain.enter(this.render);
@@ -50,23 +63,25 @@ export class RenderTreeContext {
       renderContext.hookDomain = new HookDomain();
       renderContext.childrenContexts = [];
       return;
-    } else if (typeof node === 'string') {
+    } else if (typeof node === "string") {
       text(node);
-    } else if(node.type === 'element') {
+    } else if (node.type === "element") {
       const props = Object.entries(node.props).flat();
       if (node.children) {
-        elementOpen(node.tag, node.key, [], ...props);
+        elementOpen(node.tag, "", [], ...props);
         this._renderNodeChildren(node.children, renderContext);
         elementClose(node.tag);
       } else {
-        elementVoid(node.tag, node.key, null, props);
+        elementVoid(node.tag, "", null, props);
       }
-    } else if(node.type === 'fragment') {
+    } else if (node.type === "fragment") {
       this._renderNodeChildren(node.children, renderContext);
     }
-  }
+  };
 
   render = () => {
-    patch(this.rootElement, () => this._renderNode(this.rootNode, this._baseRenderContext));
-  }
+    patch(this.rootElement, () =>
+      this._renderNode(this.rootNode, this._baseRenderContext)
+    );
+  };
 }
