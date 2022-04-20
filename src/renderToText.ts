@@ -15,7 +15,10 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
       html += node;
     } else if (node.type === 'fragment') {
       for (let child of node.children) {
-        html += renderNode(child({rerender: () => {}}));
+        const childNode = child({rerender: () => {}});
+        if (childNode) {
+          html += renderNode(childNode);
+        }
       }
     } else {
       html = `<${node.tag}`;
@@ -30,7 +33,10 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
       if (node.children) {
         html += '>';
         for (let child of node.children) {
-          html += renderNode(child({rerender: () => {}}));
+          const childNode = child({rerender: () => {}});
+          if (childNode) {
+            html += renderNode(childNode);
+          }
         }
         html += `</${node.tag}>`;
       } else {

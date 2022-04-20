@@ -45,7 +45,12 @@ export class RenderTreeContext {
     const node = nodeConstructor({ rerender: this.render });
     hookDomain.exit();
 
-    if (typeof node === 'string') {
+    if (!node) {
+      // This is pretty gross.
+      renderContext.hookDomain = new HookDomain();
+      renderContext.childrenContexts = [];
+      return;
+    } else if (typeof node === 'string') {
       text(node);
     } else if(node.type === 'element') {
       const props = Object.entries(node.props).flat();

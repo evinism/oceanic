@@ -13,7 +13,7 @@ interface BlorpConstructorArguments {
   rerender: () => void;
 }
 
-export type BlorpNodeConstructor = (args: BlorpConstructorArguments) => BlorpNode;
+export type BlorpNodeConstructor = (args: BlorpConstructorArguments) => Optional<BlorpNode>;
 
 export type BlorpElementNode = {
   _blorp: true,

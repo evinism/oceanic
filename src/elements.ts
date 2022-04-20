@@ -1,21 +1,22 @@
-import {BlorpNode, BlorpElementNode, Optional, BlorpNodeConstructor, BaseProps, BasicElementProps, PermissiveOptional, BlorpFragmentNode} from './types';
+import {BlorpNode, BlorpElementNode, Optional, BlorpNodeConstructor, BaseProps, , PermissiveOptional, BlorpFragmentNode} from './types';
 
 type PermissiveChild = PermissiveOptional<BlorpNodeConstructor | BlorpNode>;
 type PermissiveChildren = PermissiveOptional<PermissiveChild[] | PermissiveChild>;
 type Args<PropTypes> = [] | [PermissiveChildren] | [PropTypes | undefined | null, PermissiveChildren | undefined | null];
 
-function makeNullUndefined<T>(value: T | undefined | null): Optional<T> {
-  return value === null ? undefined : value;
+function permissiveOptionalToOptional<T>(permissiveOptional: PermissiveOptional<T>): Optional<T> {
+  if (permissiveOptional === null || permissiveOptional === undefined || permissiveOptional === false) {
+    return undefined;
+  }
+  return permissiveOptional;
 }
 
-function unpermissifyChild(permissiveChild: PermissiveChild): Optional<BlorpNodeConstructor> {
+function unpermissifyChild(permissiveChild: PermissiveChild): BlorpNodeConstructor {
   if (typeof permissiveChild === 'function') {
     return permissiveChild;
-  } else if(permissiveChild) {
-    const closedChild = permissiveChild;
-    return () => closedChild;
   }
-  return undefined;
+  const closedChild = permissiveChild;
+  return () => permissiveOptionalToOptional(closedChild);
 }
 
 function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<BlorpNodeConstructor[]> {
@@ -51,7 +52,7 @@ const basicElement = <PropTypes extends BaseProps = {[key: string]: any}>(tag: s
     props = undefined;
     children = unpermissifyChildren(args[0]);
   } else {
-    props = makeNullUndefined(args[0]);
+    props = permissiveOptionalToOptional(args[0]);
     children = unpermissifyChildren(args[1]);
   }
   const key = (props && props.key) || '';

@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {renderToText, render, div, span, button} from './blorp';
-import { frag } from './elements';
+import { frag, h1 } from './elements';
 import { useState } from './hooks';
 
 const html = (data: string) => data
@@ -293,6 +293,53 @@ describe('blorp', () => {
           <span>3 two</span>
           <span>20 three</span>
           <span>20 four</span>
+        </div>
+      `));
+    });
+
+    it("should rebuild render context for eliminated parts of the tree", () => {
+      let setExternalState: any;
+      let setInternalState: any;
+
+      const element = document.createElement('div');
+      const node = div(
+        () => {
+          const [shouldRenderChild, setShouldRenderChild] = useState(true);
+          setExternalState = setShouldRenderChild;
+          return shouldRenderChild ? h1(() => {
+            const [count, setCount] = useState(1);
+            setInternalState = setCount;
+            return `${count}`;
+          }) : null;
+        }
+      );
+
+      render(node, element);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <h1>1</h1>
+        </div>
+      `));
+      setInternalState(2);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <h1>2</h1>
+        </div>
+      `));
+      setExternalState(false);
+      expect(element.innerHTML).toBe(html(`
+        <div></div>
+      `));
+      setExternalState(true);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <h1>1</h1>
+        </div>
+      `));
+      setInternalState(2);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <h1>2</h1>
         </div>
       `));
     });
