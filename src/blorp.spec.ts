@@ -1,5 +1,5 @@
 import assert from 'assert';
-import {renderToText, render, div, span, button} from './blorp';
+import {renderToText, render, div, span, button, key} from './blorp';
 import { frag, h1 } from './elements';
 import { useState } from './hooks';
 
@@ -161,6 +161,24 @@ describe('blorp', () => {
       render(node, element);
       expect(element.innerHTML).toBe('<div><span>0</span></div>');
       outsideSetCount(10);
+      expect(element.innerHTML).toBe('<div><span>10</span></div>');
+    });
+
+    it("should maintain state when rerendered manually", () => {
+      let outsideSetCount: any;
+      const element = document.createElement('div');
+      const node = div(() => {
+        const [count, setCount] = useState(0);
+        outsideSetCount = setCount;
+        return span(`${count}`);
+      });
+
+      render(node, element);
+      expect(element.innerHTML).toBe('<div><span>0</span></div>');
+      outsideSetCount(10);
+      expect(element.innerHTML).toBe('<div><span>10</span></div>');
+      element.innerHTML = ""; // while this is undefined behavior, it's a good test
+      render(node, element);
       expect(element.innerHTML).toBe('<div><span>10</span></div>');
     });
 
@@ -340,6 +358,87 @@ describe('blorp', () => {
       expect(element.innerHTML).toBe(html(`
         <div>
           <h1>2</h1>
+        </div>
+      `));
+    });
+
+    it("should blow away state if rendering something with a new key", () => {
+      let outsideSetCount: any[] = [];
+      const element = document.createElement('div');
+      const node = (num: number) => key(`key${num}`, () => {
+        const [count, setCount] = useState(0);
+        outsideSetCount[num] = setCount;
+        return span(`${count}`);
+      });
+
+      render(div([
+        node(0),
+        node(1)
+      ]), element);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>0</span>
+          <span>0</span>
+        </div>
+      `));
+      outsideSetCount[0](5);
+      outsideSetCount[1](6);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>5</span>
+          <span>6</span>
+        </div>
+      `));
+
+      render(div([
+        node(2),
+        node(3)
+      ]), element);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>0</span>
+          <span>0</span>
+        </div>
+      `));
+    });
+
+
+    it("should blow away state if rendering something with a new state", () => {
+      let outsideSetCount: any[] = [];
+      const element = document.createElement('div');
+      const node = (num: number) => key(`key${num}`, () => {
+        const [count, setCount] = useState(0);
+        outsideSetCount[num] = setCount;
+        return span(`${count}`);
+      });
+
+      render(div([
+        node(0),
+        node(1)
+      ]), element);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>0</span>
+          <span>0</span>
+        </div>
+      `));
+      outsideSetCount[0](5);
+      outsideSetCount[1](6);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>5</span>
+          <span>6</span>
+        </div>
+      `));
+
+      render(div([
+        node(1),
+        node(0)
+      ]), element);
+      expect(element.innerHTML).toBe(html(`
+        <div>
+          <span>6</span>
+          <span>5</span>
         </div>
       `));
     });

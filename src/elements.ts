@@ -1,46 +1,14 @@
-import {BlorpNode, BlorpElementNode, Optional, BlorpNodeConstructor, BaseProps, , PermissiveOptional, BlorpFragmentNode} from './types';
+import { permissiveOptionalToOptional, unpermissifyChildren } from './helpers';
+import {
+  BlorpElementNode,
+  PermissiveChildren,
+  Optional,
+  BlorpNodeConstructor,
+  BaseProps,
+  BlorpFragmentNode
+} from './types';
 
-type PermissiveChild = PermissiveOptional<BlorpNodeConstructor | BlorpNode>;
-type PermissiveChildren = PermissiveOptional<PermissiveChild[] | PermissiveChild>;
 type Args<PropTypes> = [] | [PermissiveChildren] | [PropTypes | undefined | null, PermissiveChildren | undefined | null];
-
-function permissiveOptionalToOptional<T>(permissiveOptional: PermissiveOptional<T>): Optional<T> {
-  if (permissiveOptional === null || permissiveOptional === undefined || permissiveOptional === false) {
-    return undefined;
-  }
-  return permissiveOptional;
-}
-
-function unpermissifyChild(permissiveChild: PermissiveChild): BlorpNodeConstructor {
-  if (typeof permissiveChild === 'function') {
-    return permissiveChild;
-  }
-  const closedChild = permissiveChild;
-  return () => permissiveOptionalToOptional(closedChild);
-}
-
-function unpermissifyChildren(permissiveChildren: PermissiveChildren): Optional<BlorpNodeConstructor[]> {
-  const children: BlorpNodeConstructor[] = [];
-  if (!permissiveChildren) {
-    return undefined;
-  }
-  const maybePush = (permissiveChild: PermissiveChild) => {
-    const unpermissified = unpermissifyChild(permissiveChild);
-    if (unpermissified) {
-      children.push(unpermissified);
-    }
-  };
-
-  if (Array.isArray(permissiveChildren)) {
-    for (let child of permissiveChildren) {
-      maybePush(child);
-    }
-  } else {
-    maybePush(permissiveChildren);
-  }
-  return children;
-}
-
 
 const basicElement = <PropTypes extends BaseProps = {[key: string]: any}>(tag: string) => (...args: Args<PropTypes>): BlorpElementNode => {
   let props: Optional<PropTypes>;
@@ -55,13 +23,11 @@ const basicElement = <PropTypes extends BaseProps = {[key: string]: any}>(tag: s
     props = permissiveOptionalToOptional(args[0]);
     children = unpermissifyChildren(args[1]);
   }
-  const key = (props && props.key) || '';
   return {
     _blorp: true,
     type: 'element',
     tag,
     children, 
-    key,
     props: props || {},
   };
 };
@@ -86,21 +52,11 @@ export const button = basicElement('button');
 export const input = basicElement('input');
 
 
-type FragArgs = [PermissiveChildren] | [string, PermissiveChildren];
-
-export const frag = (...args: FragArgs): BlorpFragmentNode => {
-  let children: Optional<BlorpNodeConstructor[]> = undefined;
-  let key: string = '';
-if (args.length === 1) {
-    children = unpermissifyChildren(args[0]);
-  } else {
-    key = args[0];
-    children = unpermissifyChildren(args[1]);
-  }
+export const frag = (permissiveChildren: PermissiveChildren): BlorpFragmentNode => {
+  const children = unpermissifyChildren(permissiveChildren);
   return {
     _blorp: true,
     type: 'fragment',
     children: children || [],
-    key,
   };
 }

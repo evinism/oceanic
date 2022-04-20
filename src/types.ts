@@ -2,7 +2,6 @@ export type DomRepresentedProp = 'id' | 'class' | 'value' | 'checked' | 'selecte
 
 
 export interface BaseProps {
-  key?: string;
 };
 
 export type BasicElementProps =  {
@@ -13,14 +12,15 @@ interface BlorpConstructorArguments {
   rerender: () => void;
 }
 
-export type BlorpNodeConstructor = (args: BlorpConstructorArguments) => Optional<BlorpNode>;
-
+export type BlorpNodeConstructor = ((args: BlorpConstructorArguments) => Optional<BlorpNode>) &
+  {
+    key?: string,
+  };
 export type BlorpElementNode = {
   _blorp: true,
   type: "element",
   tag: string;
   children: Optional<(BlorpNodeConstructor)[]>;
-  key: string,
   props: { [key: string]: any };
 }
 
@@ -28,7 +28,6 @@ export type BlorpFragmentNode = {
   _blorp: true,
   type: "fragment",
   children: BlorpNodeConstructor[];
-  key: string;
 }
 
 export type BlorpNode = BlorpElementNode | BlorpFragmentNode | string;
@@ -36,3 +35,7 @@ export type BlorpNode = BlorpElementNode | BlorpFragmentNode | string;
 export type Optional<T> = T | undefined;
 export type PermissiveOptional<T> = T | undefined | null | false;
 export type UseStateHandler<T> = (initialState: T) => [T, (newState: T) => void];
+
+// For use with elements and helpers
+export type PermissiveChild = PermissiveOptional<BlorpNodeConstructor | BlorpNode>;
+export type PermissiveChildren = PermissiveOptional<PermissiveChild[] | PermissiveChild>;
