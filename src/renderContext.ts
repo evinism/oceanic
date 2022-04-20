@@ -12,7 +12,7 @@ import { HookDomain } from "./hookDomain";
 type RenderContext = {
   hookDomain: HookDomain;
   parent: Optional<RenderContext>;
-  childrenContexts: RenderContext[];
+  childrenContexts: { [key: string]: RenderContext[] };
 };
 
 export class RenderTreeContext {
@@ -26,7 +26,7 @@ export class RenderTreeContext {
     this._baseRenderContext = {
       hookDomain: new HookDomain(),
       parent: undefined,
-      childrenContexts: [],
+      childrenContexts: {},
     };
   }
 
@@ -34,17 +34,31 @@ export class RenderTreeContext {
     children: BlorpNodeConstructor[],
     renderContext: RenderContext
   ) {
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i];
-      if (!renderContext.childrenContexts[i]) {
+    const keyIndexCount: { [key: string]: number } = {};
+
+    for (let child of children) {
+      const key = child.key || child.name || `blorp-auto-key`;
+      const keyIndex = keyIndexCount[key] || 0;
+      keyIndexCount[key] = keyIndex + 1;
+      renderContext.childrenContexts[key] =
+        renderContext.childrenContexts[key] || [];
+      const contextsForKey = renderContext.childrenContexts[key];
+      if (!contextsForKey[keyIndex]) {
         let newRenderContext: RenderContext = {
           hookDomain: new HookDomain(),
           parent: renderContext,
-          childrenContexts: [],
+          childrenContexts: {},
         };
-        renderContext.childrenContexts[i] = newRenderContext;
+        contextsForKey[keyIndex] = newRenderContext;
       }
-      this._renderNode(child, renderContext.childrenContexts[i]);
+      this._renderNode(child, contextsForKey[keyIndex]);
+    }
+    // and prune extraneous contexts
+    for (let key in keyIndexCount) {
+      const keyIndex = keyIndexCount[key];
+      if (keyIndex < renderContext.childrenContexts[key].length) {
+        renderContext.childrenContexts[key].splice(keyIndex);
+      }
     }
   }
 
@@ -61,7 +75,7 @@ export class RenderTreeContext {
     if (!node) {
       // This is pretty gross.
       renderContext.hookDomain = new HookDomain();
-      renderContext.childrenContexts = [];
+      renderContext.childrenContexts = {};
       return;
     } else if (typeof node === "string") {
       text(node);
