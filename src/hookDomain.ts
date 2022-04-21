@@ -1,3 +1,4 @@
+import { Context } from "./context";
 import { unpermissifyOptional } from "./helpers";
 import { attachHooks, detatchHooks } from "./hooks";
 
@@ -11,7 +12,8 @@ export class HookDomain {
     prevDepArray: Optional<any[]>;
     prevDetach: Optional<() => void>;
   }[];
-  _hookOrder: ("useState" | "useEffect")[];
+  _useContextData: any[];
+  _hookOrder: ("useState" | "useEffect" | "useContext")[];
   _position: number | undefined;
 
   constructor() {
@@ -19,11 +21,12 @@ export class HookDomain {
     this._isAttached = false;
     this._useStateData = [];
     this._useEffectData = [];
+    this._useContextData = [];
     this._hookOrder = [];
     this._position = undefined;
   }
 
-  enter = (rerender: () => void) => {
+  enter = (rerender: () => void, renderContext: any) => {
     this._position = 0;
     if (this._isAttached) {
       throw new Error("Hooks are already attached!");
@@ -33,9 +36,6 @@ export class HookDomain {
     const useStateHandler: UseStateHandler = (initialState) => {
       const hookIndex = this._position!;
       this._position!++;
-
-      console.log("useStateHandler called: ", hookIndex);
-
       if (this._recording) {
         this._hookOrder[hookIndex] = "useState";
         this._useStateData[hookIndex] = initialState;
@@ -90,7 +90,34 @@ export class HookDomain {
         }, 0);
       }
     };
-    attachHooks({ useStateHandler, useEffectHandler });
+
+    const useContextHandler = <T>(context: Context<T>) => {
+      const hookIndex = this._position!;
+      this._position!++;
+
+      if (this._recording) {
+        this._hookOrder[hookIndex] = "useContext";
+        this._useContextData[hookIndex] = context;
+      } else if (
+        this._hookOrder[hookIndex] !== "useContext" ||
+        context !== this._useContextData[hookIndex]
+      ) {
+        throw new Error("useContext hook is not in the right position!");
+      }
+      let current = renderContext;
+      while (current) {
+        if (
+          current.contextNodeObj &&
+          current.contextNodeObj.contextObject === context
+        ) {
+          return current.contextNodeObj.value;
+        }
+        current = current.parent;
+      }
+      return context.defaultValue;
+    };
+
+    attachHooks({ useStateHandler, useEffectHandler, useContextHandler });
   };
 
   exit = () => {

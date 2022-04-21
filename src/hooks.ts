@@ -1,8 +1,14 @@
-import { Optional, UseStateHandler, UseEffectHandler } from "./types";
+import {
+  Optional,
+  UseStateHandler,
+  UseEffectHandler,
+  UseContextHandler,
+} from "./types";
 
 interface HooksRegistry {
   useStateHandler: UseStateHandler;
   useEffectHandler: UseEffectHandler;
+  useContextHandler: UseContextHandler;
 }
 
 let hooks: Optional<HooksRegistry> = undefined;
@@ -21,6 +27,13 @@ export const useEffect: UseEffectHandler = (effect, deps) => {
     throw new Error("hooks are not attached!");
   }
   return hooks.useEffectHandler(effect, deps);
+};
+
+export const useContext: UseContextHandler = (context) => {
+  if (!hooks) {
+    throw new Error("hooks are not attached!");
+  }
+  return hooks.useContextHandler(context);
 };
 
 // End of core hook functions

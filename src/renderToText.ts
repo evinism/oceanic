@@ -24,6 +24,7 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
     rerender: noop,
     useState: <T>(i: T) => [i, noop],
     useEffect: noop,
+    useContext: () => undefined as any, // Context should REALLY be propatagated through rendering.
   };
 
   function renderNode(nodeConstructor: Component | BlorpNode) {
@@ -46,6 +47,9 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
           html += renderNode(childNode);
         }
       }
+    } else if (node.type === "context") {
+      // TODO: Propagate context value.
+      html += renderNode(node.child);
     } else {
       html = `<${node.tag}`;
       for (let key in node.props) {

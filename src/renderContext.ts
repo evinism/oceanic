@@ -7,11 +7,16 @@ import {
   elementVoid,
 } from "incremental-dom-evinism";
 import { HookDomain } from "./hookDomain";
-import { useState, useEffect } from "./hooks";
+import { useState, useEffect, useContext } from "./hooks";
 import { frag } from "./elements";
+import { Context } from "./context";
 
 type RenderContext = {
   hookDomain: HookDomain;
+  contextNodeObj?: {
+    value: any;
+    contextObject: Context<any>;
+  };
   parent: Optional<RenderContext>;
   childrenContexts: { [key: string]: RenderContext[] };
 };
@@ -63,11 +68,12 @@ export class RenderTreeContext {
   _renderNode = (nodeConstructor: Component, renderContext: RenderContext) => {
     const hookDomain = renderContext.hookDomain;
 
-    hookDomain.enter(this.render);
+    hookDomain.enter(this.render, renderContext);
     let node = nodeConstructor({
       rerender: this.render,
       useState,
       useEffect,
+      useContext,
     });
     hookDomain.exit();
 
@@ -96,6 +102,12 @@ export class RenderTreeContext {
       }
     } else if (node.type === "fragment") {
       this._renderNodeChildren(node.children, renderContext);
+    } else if (node.type === "context") {
+      renderContext.contextNodeObj = {
+        value: node.value,
+        contextObject: node.contextObject,
+      };
+      this._renderNodeChildren([node.child], renderContext);
     }
   };
 
