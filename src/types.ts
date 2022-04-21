@@ -28,17 +28,18 @@ export type BasicElementProps = {
 } & BaseProps;
 
 // --- Blorp Node and Constructor types ---
-export interface BlorpConstructorArguments {
+export interface Hooks {
   rerender: () => void;
   useState: UseStateHandler;
   useEffect: UseEffectHandler;
 }
 
 export type BlorpNodeConstructor = ((
-  args: BlorpConstructorArguments
-) => Optional<BlorpNode>) & {
+  hooks: Hooks
+) => Optional<BlorpNode | BlorpNodeConstructor>) & {
   key?: string;
 };
+
 export type BlorpElementNode = {
   _blorp: true;
   type: "element";

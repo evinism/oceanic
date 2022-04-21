@@ -61,8 +61,21 @@ describe("blorp", () => {
       `);
       expect(actual).toBe(expected);
     });
-  });
 
+    it("should render components with initial state", () => {
+      const element = div({ id: "foo" }, ({ useState }) => {
+        const [count, __] = useState(0);
+        return div("count: " + count);
+      });
+      const actual = renderToText(element);
+      const expected = html(`
+        <div id="foo">
+          <div>count: 0</div>
+        </div>
+      `);
+      expect(actual).toBe(expected);
+    });
+  });
   describe("render", () => {
     it("should render to an element", () => {
       const element = document.createElement("div");
@@ -442,5 +455,13 @@ describe("blorp", () => {
       `)
       );
     });
+  });
+
+  it("should allow components to return other bare components", () => {
+    const element = document.createElement("div");
+    const component1 = ({ useState }) => span(useState && "hello");
+    const component2 = ({ useState }) => useState && component1;
+    render(component2, element);
+    expect(element.innerHTML).toBe(html(`<span>hello</span>`));
   });
 });
