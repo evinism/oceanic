@@ -2,9 +2,7 @@
 export type Optional<T> = T | undefined;
 export type PermissiveOptional<T> = T | undefined | null | false | void;
 
-export type PermissiveChild = PermissiveOptional<
-  BlorpNodeConstructor | BlorpNode
->;
+export type PermissiveChild = PermissiveOptional<Component | BlorpNode>;
 export type PermissiveChildren = PermissiveOptional<
   PermissiveChild[] | PermissiveChild
 >;
@@ -34,9 +32,7 @@ export interface Hooks {
   useEffect: UseEffectHandler;
 }
 
-export type BlorpNodeConstructor = ((
-  hooks: Hooks
-) => Optional<BlorpNode | BlorpNodeConstructor>) & {
+export type Component = ((hooks: Hooks) => Optional<BlorpNode | Component>) & {
   key?: string;
 };
 
@@ -44,14 +40,14 @@ export type BlorpElementNode = {
   _blorp: true;
   type: "element";
   tag: string;
-  children: Optional<BlorpNodeConstructor[]>;
+  children: Optional<Component[]>;
   props: { [key: string]: any };
 };
 
 export type BlorpFragmentNode = {
   _blorp: true;
   type: "fragment";
-  children: BlorpNodeConstructor[];
+  children: Component[];
 };
 
 export type BlorpNode = BlorpElementNode | BlorpFragmentNode | string;

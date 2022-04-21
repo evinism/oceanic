@@ -1,4 +1,4 @@
-import { BlorpNodeConstructor, Optional } from "./types";
+import { Component, Optional } from "./types";
 import {
   patch,
   text,
@@ -18,10 +18,10 @@ type RenderContext = {
 
 export class RenderTreeContext {
   rootElement: Element;
-  rootNode: BlorpNodeConstructor;
+  rootNode: Component;
   _baseRenderContext: RenderContext;
 
-  constructor(rootElement: Element, rootNode: BlorpNodeConstructor) {
+  constructor(rootElement: Element, rootNode: Component) {
     this.rootElement = rootElement;
     this.rootNode = rootNode;
     this._baseRenderContext = {
@@ -31,10 +31,7 @@ export class RenderTreeContext {
     };
   }
 
-  _renderNodeChildren(
-    children: BlorpNodeConstructor[],
-    renderContext: RenderContext
-  ) {
+  _renderNodeChildren(children: Component[], renderContext: RenderContext) {
     const keyIndexCount: { [key: string]: number } = {};
 
     for (let child of children) {
@@ -63,10 +60,7 @@ export class RenderTreeContext {
     }
   }
 
-  _renderNode = (
-    nodeConstructor: BlorpNodeConstructor,
-    renderContext: RenderContext
-  ) => {
+  _renderNode = (nodeConstructor: Component, renderContext: RenderContext) => {
     const hookDomain = renderContext.hookDomain;
 
     hookDomain.enter(this.render);

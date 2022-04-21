@@ -1,9 +1,4 @@
-import {
-  BlorpNodeConstructor,
-  BlorpNode,
-  DomRepresentedProp,
-  Hooks,
-} from "./types";
+import { Component, BlorpNode, DomRepresentedProp, Hooks } from "./types";
 import { frag } from "./elements";
 
 const noop = () => {};
@@ -31,7 +26,7 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
     useEffect: noop,
   };
 
-  function renderNode(nodeConstructor: BlorpNodeConstructor | BlorpNode) {
+  function renderNode(nodeConstructor: Component | BlorpNode) {
     const fn =
       typeof nodeConstructor === "function"
         ? nodeConstructor

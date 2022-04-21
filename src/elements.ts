@@ -3,7 +3,7 @@ import {
   BlorpElementNode,
   PermissiveChildren,
   Optional,
-  BlorpNodeConstructor,
+  Component,
   PermissiveOptional,
   BaseProps,
   BlorpFragmentNode,
@@ -18,7 +18,7 @@ const basicElement =
   <PropTypes extends BaseProps = { [key: string]: any }>(tag: string) =>
   (...args: Args<PropTypes>): BlorpElementNode => {
     let props: Optional<PropTypes>;
-    let children: Optional<BlorpNodeConstructor[]> = undefined;
+    let children: Optional<Component[]> = undefined;
     if (args.length === 0) {
       props = undefined;
       children = undefined;

@@ -2,7 +2,7 @@ import {
   PermissiveChild,
   PermissiveChildren,
   Optional,
-  BlorpNodeConstructor,
+  Component,
   PermissiveOptional,
 } from "./types";
 
@@ -19,9 +19,7 @@ export function unpermissifyOptional<T>(
   return permissiveOptional;
 }
 
-export function unpermissifyChild(
-  permissiveChild: PermissiveChild
-): BlorpNodeConstructor {
+export function unpermissifyChild(permissiveChild: PermissiveChild): Component {
   if (typeof permissiveChild === "function") {
     return permissiveChild;
   }
@@ -31,8 +29,8 @@ export function unpermissifyChild(
 
 export function unpermissifyChildren(
   permissiveChildren: PermissiveChildren
-): Optional<BlorpNodeConstructor[]> {
-  const children: BlorpNodeConstructor[] = [];
+): Optional<Component[]> {
+  const children: Component[] = [];
   if (!permissiveChildren) {
     return undefined;
   }
