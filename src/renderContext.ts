@@ -1,13 +1,13 @@
-import { BlorpNodeConstructor, Optional, UseStateHandler } from "./types";
+import { BlorpNodeConstructor, Optional } from "./types";
 import {
   patch,
   text,
   elementOpen,
   elementClose,
   elementVoid,
-  currentElement,
 } from "incremental-dom-evinism";
 import { HookDomain } from "./hookDomain";
+import { useState, useEffect } from "./hooks";
 
 type RenderContext = {
   hookDomain: HookDomain;
@@ -69,7 +69,11 @@ export class RenderTreeContext {
     const hookDomain = renderContext.hookDomain;
 
     hookDomain.enter(this.render);
-    const node = nodeConstructor({ rerender: this.render });
+    const node = nodeConstructor({
+      rerender: this.render,
+      useState,
+      useEffect,
+    });
     hookDomain.exit();
 
     if (!node) {

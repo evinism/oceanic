@@ -30,7 +30,7 @@ export class HookDomain {
     }
     this._isAttached = true;
 
-    const useStateHandler: UseStateHandler<any> = (initialState) => {
+    const useStateHandler: UseStateHandler = (initialState) => {
       const hookIndex = this._position!;
       this._position!++;
 

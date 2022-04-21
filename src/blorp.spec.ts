@@ -1,7 +1,6 @@
 import assert from "assert";
 import { renderToText, render, div, span, button, key } from "./blorp";
 import { frag, h1 } from "./elements";
-import { useState } from "./hooks";
 
 const html = (data: string) =>
   data.trim().replace(/\s+/g, " ").replace(/\s+</g, "<").replace(/>\s+/g, ">");
@@ -132,7 +131,7 @@ describe("blorp", () => {
     it("should allow basic useState calls", () => {
       let outsideSetCount: any;
       const element = document.createElement("div");
-      const node = div(() => {
+      const node = div(({ useState }) => {
         const [count, setCount] = useState(0);
         outsideSetCount = setCount;
         return span(`${count}`);
@@ -147,7 +146,7 @@ describe("blorp", () => {
     it("should maintain state when rerendered manually", () => {
       let outsideSetCount: any;
       const element = document.createElement("div");
-      const node = div(() => {
+      const node = div(({ useState }) => {
         const [count, setCount] = useState(0);
         outsideSetCount = setCount;
         return span(`${count}`);
@@ -167,7 +166,7 @@ describe("blorp", () => {
       let outsideSetText: any;
 
       const element = document.createElement("div");
-      const node = div(() => {
+      const node = div(({ useState }) => {
         const [count, setCount] = useState(0);
         const [text, setText] = useState("hello");
         outsideSetCount = setCount;
@@ -191,12 +190,12 @@ describe("blorp", () => {
 
       const element = document.createElement("div");
       const node = div([
-        () => {
+        ({ useState }) => {
           const [count, setCount] = useState(1);
           outsideSetCountOne = setCount;
           return span(`${count}`);
         },
-        () => {
+        ({ useState }) => {
           const [count, setCount] = useState(2);
           outsideSetCountTwo = setCount;
           return span(`${count}`);
@@ -247,12 +246,12 @@ describe("blorp", () => {
 
       const element = document.createElement("div");
       const node = div([
-        () => {
+        ({ useState }) => {
           const [count, setCount] = useState(1);
           outsideSetCountOne = setCount;
           return frag([span(`${count} one`), span(`${count} two`)]);
         },
-        () => {
+        ({ useState }) => {
           const [count, setCount] = useState(2);
           outsideSetCountTwo = setCount;
           return frag([span(`${count} three`), span(`${count} four`)]);
@@ -310,7 +309,7 @@ describe("blorp", () => {
       let setInternalState: any;
 
       const element = document.createElement("div");
-      const node = div(() => {
+      const node = div(({ useState }) => {
         const [shouldRenderChild, setShouldRenderChild] = useState(true);
         setExternalState = setShouldRenderChild;
         return shouldRenderChild
@@ -366,7 +365,7 @@ describe("blorp", () => {
       let outsideSetCount: any[] = [];
       const element = document.createElement("div");
       const node = (num: number) =>
-        key(`key${num}`, () => {
+        key(`key${num}`, ({ useState }) => {
           const [count, setCount] = useState(0);
           outsideSetCount[num] = setCount;
           return span(`${count}`);
@@ -407,7 +406,7 @@ describe("blorp", () => {
       let outsideSetCount: any[] = [];
       const element = document.createElement("div");
       const node = (num: number) =>
-        key(`key${num}`, () => {
+        key(`key${num}`, ({ useState }) => {
           const [count, setCount] = useState(0);
           outsideSetCount[num] = setCount;
           return span(`${count}`);

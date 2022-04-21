@@ -4,6 +4,7 @@ import {
   PermissiveChildren,
   Optional,
   BlorpNodeConstructor,
+  PermissiveOptional,
   BaseProps,
   BlorpFragmentNode,
 } from "./types";
@@ -11,7 +12,7 @@ import {
 type Args<PropTypes> =
   | []
   | [PermissiveChildren]
-  | [PropTypes | undefined | null, PermissiveChildren | undefined | null];
+  | [PermissiveOptional<PropTypes>, PermissiveChildren];
 
 const basicElement =
   <PropTypes extends BaseProps = { [key: string]: any }>(tag: string) =>

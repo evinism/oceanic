@@ -1,7 +1,7 @@
 import { Optional, UseStateHandler, UseEffectHandler } from "./types";
 
 interface HooksRegistry {
-  useStateHandler: UseStateHandler<any>;
+  useStateHandler: UseStateHandler;
   useEffectHandler: UseEffectHandler;
 }
 

@@ -1,6 +1,12 @@
 export * from "./elements";
-import { BlorpNode, DomRepresentedProp } from "./types";
+import {
+  BlorpNode,
+  DomRepresentedProp,
+  BlorpConstructorArguments,
+} from "./types";
 export { BlorpNode } from "./types";
+
+const noop = () => {};
 
 export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
   const domRepresentedProps = [
@@ -19,13 +25,19 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
     return typeof value === "string" ? `"${value}"` : value;
   }
 
+  const hooks: BlorpConstructorArguments = {
+    rerender: noop,
+    useState: <T>(i: T) => [i, noop],
+    useEffect: noop,
+  };
+
   function renderNode(node: BlorpNode) {
     let html = "";
     if (typeof node === "string") {
       html += node;
     } else if (node.type === "fragment") {
       for (let child of node.children) {
-        const childNode = child({ rerender: () => {} });
+        const childNode = child(hooks);
         if (childNode) {
           html += renderNode(childNode);
         }
@@ -43,7 +55,7 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
       if (node.children) {
         html += ">";
         for (let child of node.children) {
-          const childNode = child({ rerender: () => {} });
+          const childNode = child(hooks);
           if (childNode) {
             html += renderNode(childNode);
           }

@@ -28,8 +28,10 @@ export type BasicElementProps = {
 } & BaseProps;
 
 // --- Blorp Node and Constructor types ---
-interface BlorpConstructorArguments {
+export interface BlorpConstructorArguments {
   rerender: () => void;
+  useState: UseStateHandler;
+  useEffect: UseEffectHandler;
 }
 
 export type BlorpNodeConstructor = ((
@@ -58,11 +60,11 @@ interface BlorpContext<T> {
   _blorp?: T;
 }
 
-export type UseStateHandler<T> = (
+export type UseStateHandler = <T>(
   initialState: T
 ) => [T, (newState: T) => void];
 export type UseEffectHandler = (
   create: () => (() => void) | void,
   deps: any[] | void | null
 ) => void;
-export type UseContextHandler<T> = (context: BlorpContext<T>) => T;
+export type UseContextHandler = <T>(context: BlorpContext<T>) => T;
