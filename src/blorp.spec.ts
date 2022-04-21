@@ -489,6 +489,73 @@ describe("blorp", () => {
           `)
         );
       });
+
+      it("deeply passes context down with multiple providers", () => {
+        const context = createContext("boats");
+        const element = document.createElement("div");
+        const node = context.provide(
+          "cats",
+          context.provide(
+            "bats",
+            div(({ useContext }) => {
+              const count = useContext(context);
+              return span(`${count}`);
+            })
+          )
+        );
+
+        render(node, element);
+        expect(element.innerHTML).toBe(
+          html(`
+            <div>
+              <span>bats</span>
+            </div>
+          `)
+        );
+      });
+
+      it("defaults to the default value if there's no provider", () => {
+        const context = createContext("zombo");
+        const element = document.createElement("div");
+        const node = div(({ useContext }) => {
+          const count = useContext(context);
+          return span(`${count}`);
+        });
+
+        render(node, element);
+        expect(element.innerHTML).toBe(
+          html(`
+            <div>
+              <span>zombo</span>
+            </div>
+          `)
+        );
+      });
+
+      it("can tell the difference between two different contexts", () => {
+        const context1 = createContext("zombo");
+        const context2 = createContext("zombo");
+        const element = document.createElement("div");
+
+        const node = context1.provide(
+          "zombo2",
+          context2.provide(
+            "zombo3",
+            div(({ useContext }) => {
+              const whichzombo = useContext(context1);
+              return span(`${whichzombo}`);
+            })
+          )
+        );
+        render(node, element);
+        expect(element.innerHTML).toBe(
+          html(`
+            <div>
+              <span>zombo2</span>
+            </div>
+          `)
+        );
+      });
     });
   });
 });
