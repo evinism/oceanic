@@ -6,7 +6,7 @@ import {
   PermissiveOptional,
 } from "./types";
 
-export function permissiveOptionalToOptional<T>(
+export function unpermissifyOptional<T>(
   permissiveOptional: PermissiveOptional<T>
 ): Optional<T> {
   if (
@@ -26,7 +26,7 @@ export function unpermissifyChild(
     return permissiveChild;
   }
   const closedChild = permissiveChild;
-  return () => permissiveOptionalToOptional(closedChild);
+  return () => unpermissifyOptional(closedChild);
 }
 
 export function unpermissifyChildren(

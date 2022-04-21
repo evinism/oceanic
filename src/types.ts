@@ -1,3 +1,15 @@
+// --- Helper types ---
+export type Optional<T> = T | undefined;
+export type PermissiveOptional<T> = T | undefined | null | false | void;
+
+export type PermissiveChild = PermissiveOptional<
+  BlorpNodeConstructor | BlorpNode
+>;
+export type PermissiveChildren = PermissiveOptional<
+  PermissiveChild[] | PermissiveChild
+>;
+
+// --- Element types ---
 export type DomRepresentedProp =
   | "id"
   | "class"
@@ -15,6 +27,7 @@ export type BasicElementProps = {
   [key in DomRepresentedProp]?: string | boolean | number;
 } & BaseProps;
 
+// --- Blorp Node and Constructor types ---
 interface BlorpConstructorArguments {
   rerender: () => void;
 }
@@ -40,16 +53,16 @@ export type BlorpFragmentNode = {
 
 export type BlorpNode = BlorpElementNode | BlorpFragmentNode | string;
 
-export type Optional<T> = T | undefined;
-export type PermissiveOptional<T> = T | undefined | null | false;
+// --- Hook types ---
+interface BlorpContext<T> {
+  _blorp?: T;
+}
+
 export type UseStateHandler<T> = (
   initialState: T
 ) => [T, (newState: T) => void];
-
-// For use with elements and helpers
-export type PermissiveChild = PermissiveOptional<
-  BlorpNodeConstructor | BlorpNode
->;
-export type PermissiveChildren = PermissiveOptional<
-  PermissiveChild[] | PermissiveChild
->;
+export type UseEffectHandler = (
+  create: () => (() => void) | void,
+  deps: any[] | void | null
+) => void;
+export type UseContextHandler<T> = (context: BlorpContext<T>) => T;

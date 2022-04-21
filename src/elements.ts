@@ -1,4 +1,4 @@
-import { permissiveOptionalToOptional, unpermissifyChildren } from "./helpers";
+import { unpermissifyOptional, unpermissifyChildren } from "./helpers";
 import {
   BlorpElementNode,
   PermissiveChildren,
@@ -25,7 +25,7 @@ const basicElement =
       props = undefined;
       children = unpermissifyChildren(args[0]);
     } else {
-      props = permissiveOptionalToOptional(args[0]);
+      props = unpermissifyOptional(args[0]);
       children = unpermissifyChildren(args[1]);
     }
     return {
