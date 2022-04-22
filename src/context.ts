@@ -1,7 +1,7 @@
 import { unpermissifyChild } from "./helpers";
 import { BlorpContextNode, PermissiveChild } from "./types";
 
-export class Context<T> {
+export class Context<T = any> {
   defaultValue: T;
 
   constructor(defaultValue: T) {

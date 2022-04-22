@@ -1,17 +1,17 @@
 import { BlorpNode, Component } from "./types";
-import { RenderTreeContext } from "./renderContext";
+import { RenderTree } from "./renderTree";
 
-const activeRenderContexts = new Map<Element, RenderTreeContext>();
+const activeRenderTreeNodes = new Map<Element, RenderTree>();
 
 export function render(node: BlorpNode | Component, element: Element) {
   const nodeConstructor = typeof node === "function" ? node : () => node;
-  const renderContext = activeRenderContexts.get(element);
-  if (renderContext) {
-    renderContext.rootNode = nodeConstructor;
-    renderContext.render();
+  const renderTreeNode = activeRenderTreeNodes.get(element);
+  if (renderTreeNode) {
+    renderTreeNode.rootNode = nodeConstructor;
+    renderTreeNode.render();
   } else {
-    const renderTreeContext = new RenderTreeContext(element, nodeConstructor);
-    activeRenderContexts.set(element, renderTreeContext);
-    renderTreeContext.render();
+    const renderTree = new RenderTree(element, nodeConstructor);
+    activeRenderTreeNodes.set(element, renderTree);
+    renderTree.render();
   }
 }
