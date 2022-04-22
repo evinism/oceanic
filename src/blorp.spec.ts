@@ -346,7 +346,7 @@ describe("blorp", () => {
           const [shouldRenderChild, setShouldRenderChild] = useState(true);
           setExternalState = setShouldRenderChild;
           return shouldRenderChild
-            ? h1(() => {
+            ? h1(({ useState }) => {
                 const [count, setCount] = useState(1);
                 setInternalState = setCount;
                 return `${count}`;

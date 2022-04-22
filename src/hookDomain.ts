@@ -1,8 +1,6 @@
 import { Context } from "./context";
 import { unpermissifyOptional } from "./helpers";
-import { attachHooks, detatchHooks } from "./hooks";
-
-import { UseEffectHandler, UseStateHandler, Optional } from "./types";
+import { UseEffectHandler, UseStateHandler, Optional, Hooks } from "./types";
 
 export class HookDomain {
   _recording: boolean;
@@ -26,7 +24,7 @@ export class HookDomain {
     this._position = undefined;
   }
 
-  enter = (rerender: () => void, renderContext: any) => {
+  enter = (rerender: () => void, renderContext: any): Hooks => {
     this._position = 0;
     if (this._isAttached) {
       throw new Error("Hooks are already attached!");
@@ -117,7 +115,12 @@ export class HookDomain {
       return context.defaultValue;
     };
 
-    attachHooks({ useStateHandler, useEffectHandler, useContextHandler });
+    return {
+      useState: useStateHandler,
+      useEffect: useEffectHandler,
+      useContext: useContextHandler,
+      rerender: rerender,
+    };
   };
 
   exit = () => {
@@ -129,7 +132,6 @@ export class HookDomain {
       throw new Error("Hooks are not in the right position!");
     }
 
-    detatchHooks();
     this._recording = false;
     this._isAttached = false;
     this._position = undefined;

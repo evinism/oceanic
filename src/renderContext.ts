@@ -7,7 +7,6 @@ import {
   elementVoid,
 } from "incremental-dom-evinism";
 import { HookDomain } from "./hookDomain";
-import { useState, useEffect, useContext } from "./hooks";
 import { frag } from "./elements";
 import { Context } from "./context";
 
@@ -68,28 +67,20 @@ export class RenderTreeContext {
   _renderNode = (nodeConstructor: Component, renderContext: RenderContext) => {
     const hookDomain = renderContext.hookDomain;
 
-    hookDomain.enter(this.render, renderContext);
-    let node = nodeConstructor({
-      rerender: this.render,
-      useState,
-      useEffect,
-      useContext,
-    });
+    const hooks = hookDomain.enter(this.render, renderContext);
+    let node = nodeConstructor(hooks);
     hookDomain.exit();
-
-    if (!node) {
-      // This is pretty gross.
-      renderContext.hookDomain = new HookDomain();
-      renderContext.childrenContexts = {};
-      return;
-    }
 
     // If we've constructed another constructor, we render it as if it's a fragment
     if (typeof node === "function") {
       node = frag(node);
     }
 
-    if (typeof node === "string") {
+    if (!node) {
+      renderContext.childrenContexts = {};
+      return;
+    } else if (typeof node === "string") {
+      renderContext.childrenContexts = {};
       text(node);
     } else if (node.type === "element") {
       const props = Object.entries(node.props).flat();
