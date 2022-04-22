@@ -4,7 +4,7 @@ blorp aims to make it easy to build dynamic UIs without the need for fancy compi
 
 Think of it as a reduction of the best parts of React, without any magic!
 
-installation via `npm install --save protoblorp` for now, until it's a hint more stable.
+installation via `npm install --save blorp`.
 
 ## Overview / Examples
 
