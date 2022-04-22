@@ -1,4 +1,4 @@
-import { Component, Optional } from "./types";
+import { StrictComponent, Optional } from "./types";
 import {
   patch,
   text,
@@ -9,6 +9,7 @@ import {
 import { HookDomain } from "./hookDomain";
 import { frag } from "./elements";
 import { Context } from "./context";
+import { getKey } from "./helpers";
 
 type RenderTreeNode = {
   hookDomain: HookDomain;
@@ -22,10 +23,10 @@ type RenderTreeNode = {
 
 export class RenderTree {
   rootElement: Element;
-  rootNode: Component;
+  rootNode: StrictComponent;
   _baseRenderTreeNode: RenderTreeNode;
 
-  constructor(rootElement: Element, rootNode: Component) {
+  constructor(rootElement: Element, rootNode: StrictComponent) {
     this.rootElement = rootElement;
     this.rootNode = rootNode;
     this._baseRenderTreeNode = {
@@ -51,13 +52,13 @@ export class RenderTree {
     };
 
   _renderNodeChildren = (
-    children: Component[],
+    children: StrictComponent[],
     renderTreeNode: RenderTreeNode
   ) => {
     const keyIndexCount: { [key: string]: number } = {};
 
     for (let child of children) {
-      const key = child.key || child.name || `blorp-auto-key`;
+      const key = getKey(child);
       const keyIndex = keyIndexCount[key] || 0;
       keyIndexCount[key] = keyIndex + 1;
       renderTreeNode.childrenContexts[key] =
@@ -83,10 +84,10 @@ export class RenderTree {
   };
 
   _renderNode = (
-    nodeConstructor: Component,
+    nodeConstructor: StrictComponent,
     renderTreeNode: RenderTreeNode
   ) => {
-    let node: ReturnType<Component>;
+    let node: ReturnType<StrictComponent>;
 
     renderTreeNode.hookDomain.withHooks(
       this.render,
@@ -96,17 +97,11 @@ export class RenderTree {
       }
     );
 
-    // If we've constructed another constructor, we render it as if it's a fragment
-    if (typeof node === "function") {
-      node = frag(node);
-    }
-
     if (!node) {
       renderTreeNode.childrenContexts = {};
-      return;
-    } else if (typeof node === "string") {
+    } else if (node.type === "text") {
       renderTreeNode.childrenContexts = {};
-      text(node);
+      text(node.text);
     } else if (node.type === "element") {
       const props = Object.entries(node.props).flat();
       if (node.children) {

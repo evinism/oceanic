@@ -1,16 +1,17 @@
-import { BlorpNode, Component } from "./types";
+import { PermissiveChild } from "./types";
 import { RenderTree } from "./renderTree";
+import { unpermissifyChild } from "./helpers";
 
 const activeRenderTreeNodes = new Map<Element, RenderTree>();
 
-export function render(node: BlorpNode | Component, element: Element) {
-  const nodeConstructor = typeof node === "function" ? node : () => node;
+export function render(node: PermissiveChild, element: Element) {
+  const strictChild = unpermissifyChild(node);
   const renderTreeNode = activeRenderTreeNodes.get(element);
   if (renderTreeNode) {
-    renderTreeNode.rootNode = nodeConstructor;
+    renderTreeNode.rootNode = strictChild;
     renderTreeNode.render();
   } else {
-    const renderTree = new RenderTree(element, nodeConstructor);
+    const renderTree = new RenderTree(element, strictChild);
     activeRenderTreeNodes.set(element, renderTree);
     renderTree.render();
   }

@@ -1,8 +1,11 @@
 import { unpermissifyChild } from "./helpers";
-import { Component, PermissiveChild } from "./types";
+import { StrictComponent, PermissiveChild } from "./types";
 
-export const key = (keyname: string, child: PermissiveChild): Component => {
-  const result: Component = (...args) => unpermissifyChild(child)(...args);
+export const key = (
+  keyname: string,
+  child: PermissiveChild
+): StrictComponent => {
+  const result: StrictComponent = unpermissifyChild(child);
   result.key = keyname;
   return result;
 };

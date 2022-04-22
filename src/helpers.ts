@@ -1,10 +1,18 @@
+import { frag } from "./elements";
 import {
   PermissiveChild,
   PermissiveChildren,
   Optional,
-  Component,
   PermissiveOptional,
+  BlorpNode,
+  StrictComponent,
+  PermissiveNode,
+  PermissiveComponent,
 } from "./types";
+
+export const getKey = (component: PermissiveComponent): string => {
+  return component.key || component.name || `blorp-auto-key`;
+};
 
 export function unpermissifyOptional<T>(
   permissiveOptional: PermissiveOptional<T>
@@ -19,18 +27,47 @@ export function unpermissifyOptional<T>(
   return permissiveOptional;
 }
 
-export function unpermissifyChild(permissiveChild: PermissiveChild): Component {
-  if (typeof permissiveChild === "function") {
-    return permissiveChild;
+export const unpermissifyNode = (
+  permissiveNode: PermissiveNode
+): Optional<BlorpNode> => {
+  let strictNode: Optional<BlorpNode>;
+  if (typeof permissiveNode === "string") {
+    strictNode = {
+      _blorp: true,
+      type: "text",
+      text: permissiveNode,
+    };
+  } else {
+    strictNode = unpermissifyOptional(permissiveNode);
   }
-  const closedChild = permissiveChild;
-  return () => unpermissifyOptional(closedChild);
+  return strictNode;
+};
+
+export function unpermissifyChild(
+  permissiveChild: PermissiveChild
+): StrictComponent {
+  // TODO: We need to maintain key semantics here.
+  if (typeof permissiveChild === "function") {
+    const bound = permissiveChild;
+    let retval: StrictComponent = (hooks) => {
+      const res = bound(hooks);
+      if (typeof res === "function") {
+        // If we get a function back, we wrap it in a fragment
+        return frag(res);
+      }
+      return unpermissifyNode(res);
+    };
+    retval.key = getKey(permissiveChild);
+    return retval;
+  }
+  const strictNode = unpermissifyNode(permissiveChild);
+  return () => strictNode;
 }
 
 export function unpermissifyChildren(
   permissiveChildren: PermissiveChildren
-): Optional<Component[]> {
-  const children: Component[] = [];
+): Optional<StrictComponent[]> {
+  const children: StrictComponent[] = [];
   if (!permissiveChildren) {
     return undefined;
   }

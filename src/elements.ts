@@ -3,7 +3,7 @@ import {
   BlorpElementNode,
   PermissiveChildren,
   Optional,
-  Component,
+  StrictComponent,
   PermissiveOptional,
   BaseProps,
   BlorpFragmentNode,
@@ -23,7 +23,7 @@ export const tag =
   ) =>
   (...args: Args<PropTypes>): BlorpElementNode => {
     let props: Optional<PropTypes>;
-    let children: Optional<Component[]> = undefined;
+    let children: Optional<StrictComponent[]> = undefined;
     if (args.length === 0) {
       props = undefined;
       children = undefined;

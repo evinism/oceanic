@@ -5,7 +5,9 @@ import { Context } from "./context";
 export type Optional<T> = T | undefined;
 export type PermissiveOptional<T> = T | undefined | null | false | void;
 
-export type PermissiveChild = PermissiveOptional<Component | BlorpNode>;
+export type PermissiveChild = PermissiveOptional<
+  Component | BlorpNode | string
+>;
 export type PermissiveChildren = PermissiveOptional<
   PermissiveChild[] | PermissiveChild
 >;
@@ -36,7 +38,18 @@ export interface Hooks {
   useContext: UseContextHandler;
 }
 
-export type Component = ((hooks: Hooks) => Optional<BlorpNode | Component>) & {
+export type PermissiveNode = PermissiveOptional<BlorpNode | string>;
+
+export type PermissiveComponent = ((
+  hooks: Hooks
+) => PermissiveOptional<PermissiveNode | PermissiveComponent>) & {
+  key?: string;
+};
+
+// This name is only to be used externally
+export type Component = PermissiveComponent;
+
+export type StrictComponent = ((hooks: Hooks) => Optional<BlorpNode>) & {
   key?: string;
 };
 
@@ -44,29 +57,35 @@ export type BlorpElementNode = {
   _blorp: true;
   type: "element";
   tag: string;
-  children: Optional<Component[]>;
+  children: Optional<StrictComponent[]>;
   props: { [key: string]: any };
 };
 
 export type BlorpFragmentNode = {
   _blorp: true;
   type: "fragment";
-  children: Component[];
+  children: StrictComponent[];
 };
 
 export type BlorpContextNode = {
   _blorp: true;
   type: "context";
-  child: Component;
+  child: StrictComponent;
   value: unknown;
   contextObject: Context<unknown>;
+};
+
+export type BlorpTextNode = {
+  _blorp: true;
+  type: "text";
+  text: string;
 };
 
 export type BlorpNode =
   | BlorpElementNode
   | BlorpFragmentNode
   | BlorpContextNode
-  | string;
+  | BlorpTextNode;
 
 // --- Hook types ---
 

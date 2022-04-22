@@ -1,4 +1,4 @@
-import { Component, BlorpNode, DomRepresentedProp, Hooks } from "./types";
+import { StrictComponent, BlorpNode, DomRepresentedProp, Hooks } from "./types";
 import { frag } from "./elements";
 
 const noop = () => {};
@@ -27,17 +27,21 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
     useContext: () => undefined as any, // Context should REALLY be propatagated through rendering.
   };
 
-  function renderNode(nodeConstructor: Component | BlorpNode) {
+  function renderNode(nodeConstructor: StrictComponent | BlorpNode) {
     const fn =
       typeof nodeConstructor === "function"
         ? nodeConstructor
         : () => nodeConstructor;
-    const node = fn(hooks);
+    let node = fn(hooks);
+
+    if (typeof node === "function") {
+      node = frag(node);
+    }
 
     let html = "";
     if (!node) {
-    } else if (typeof node === "string") {
-      html += node;
+    } else if (node.type === "text") {
+      html += node.text;
     } else if (typeof node === "function") {
       html += renderNode(() => frag(node));
     } else if (node.type === "fragment") {
