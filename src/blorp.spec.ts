@@ -1,6 +1,15 @@
 import assert from "assert";
-import { renderToText, render, div, span, key, createContext } from "./blorp";
-import { frag, h1 } from "./elements";
+import {
+  renderToText,
+  render,
+  div,
+  span,
+  h1,
+  frag,
+  key,
+  createContext,
+} from "./blorp";
+
 
 const html = (data: string) =>
   data.trim().replace(/\s+/g, " ").replace(/\s+</g, "<").replace(/>\s+/g, ">");
