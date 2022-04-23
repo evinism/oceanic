@@ -8,6 +8,7 @@ import {
   StrictComponent,
   PermissiveNode,
   PermissiveComponent,
+  BlorpFragmentNode,
 } from "./types";
 
 export const getKey = (component: PermissiveComponent): string => {
@@ -53,7 +54,12 @@ export function unpermissifyChild(
       const res = bound(hooks);
       if (typeof res === "function") {
         // If we get a function back, we wrap it in a fragment
-        return frag(res);
+        const fragRes: BlorpFragmentNode = {
+          _blorp: true,
+          type: "fragment",
+          children: unpermissifyChildren(res)!,
+        };
+        return fragRes;
       }
       return unpermissifyNode(res);
     };
