@@ -1,4 +1,5 @@
-export { tag, frag } from "./elements";
+export { tag } from "./elements";
+export { frag } from "./frag";
 export * from "./htmlElementList";
 export { BlorpNode, Component } from "./types";
 export { renderToText } from "./renderToText";

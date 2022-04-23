@@ -36,7 +36,7 @@ const component = ({ useState }) => {
   const [isClicked, setIsClicked] = useState(false);
   return div([
     div(isClicked ? "clicked" : "unclicked!"),
-    button({onClick: () => setIsClicked(true)}, "click me!!"),
+    button({onclick: () => setIsClicked(true)}, "click me!!"),
   ]);
 };
 
@@ -66,20 +66,18 @@ const component = div([
 render(component, document.getElementById('root'));
 ```
 
-## Some More Details for Those Who Want Them
+## Some More Details for all Who Want Them
 If you're here, you clearly want to know more. 
 
 ### Blorp's node and component model. 
 
-`BlorpNode`s are anything that Blorp can render. The output of `div()`, `span()`, `frag()`, or any other element is a BlorpNode.
-
-A `Component` in blorp is simply a function from `Hooks` to an optional `BlorpNode` (or another component!);
+`BlorpNode`s are anything that Blorp can render. The output of `div()`, `span()`, `frag()`, or any other element is a BlorpNode. A `Component` in blorp is simply a function from `Hooks` to an optional `BlorpNode`
 
 In most cases where you pass in a Component, you can just directly pass in a Blorp Node instead.
 
 ### Dom Diffing
 
-Blorp uses incremental dom, rather than creating a virtual dom.
+Blorp uses incremental dom, rather than creating a virtual dom. 
 
 ### Keys
 When determining which state lines up to which element in a constantly-changing web app, Blorp (like React), uses keys. While keys in React are represented as props, keys in `blorp` are more separated. Keys can be set via the `key()` function.

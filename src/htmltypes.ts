@@ -42,7 +42,6 @@ export type HtmlTag =
   | "h4"
   | "h5"
   | "h6"
-  | "head"
   | "header"
   | "hgroup"
   | "hr"
@@ -106,3 +105,120 @@ export type HtmlTag =
   | "ul"
   | "video"
   | "wbr";
+
+type TagNameToTagType = {
+  a: HTMLAnchorElement;
+  abbr: HTMLElement;
+  address: HTMLElement;
+  area: HTMLAreaElement;
+  article: HTMLElement;
+  aside: HTMLElement;
+  audio: HTMLAudioElement;
+  b: HTMLElement;
+  base: HTMLBaseElement;
+  bdi: HTMLElement;
+  bdo: HTMLElement;
+  blockquote: HTMLElement;
+  br: HTMLBRElement;
+  button: HTMLButtonElement;
+  canvas: HTMLCanvasElement;
+  caption: HTMLTableCaptionElement;
+  cite: HTMLElement;
+  code: HTMLElement;
+  col: HTMLTableColElement;
+  colgroup: HTMLElement;
+  data: HTMLDataElement;
+  datalist: HTMLDataListElement;
+  dd: HTMLElement;
+  del: HTMLElement;
+  details: HTMLDetailsElement;
+  dfn: HTMLElement;
+  dialog: HTMLDialogElement;
+  div: HTMLDivElement;
+  dl: HTMLDListElement;
+  dt: HTMLElement;
+  em: HTMLElement;
+  embed: HTMLEmbedElement;
+  fieldset: HTMLFieldSetElement;
+  figure: HTMLElement;
+  figcaption: HTMLElement;
+  footer: HTMLElement;
+  form: HTMLFormElement;
+  h1: HTMLHeadingElement;
+  h2: HTMLHeadingElement;
+  h3: HTMLHeadingElement;
+  h4: HTMLHeadingElement;
+  h5: HTMLHeadingElement;
+  h6: HTMLHeadingElement;
+  header: HTMLElement;
+  hgroup: HTMLElement;
+  hr: HTMLHRElement;
+  i: HTMLElement;
+  iframe: HTMLIFrameElement;
+  img: HTMLImageElement;
+  input: HTMLInputElement;
+  ins: HTMLElement;
+  kbd: HTMLElement;
+  label: HTMLLabelElement;
+  legend: HTMLLegendElement;
+  li: HTMLLIElement;
+  link: HTMLLinkElement;
+  main: HTMLElement;
+  map: HTMLMapElement;
+  mark: HTMLElement;
+  menu: HTMLMenuElement;
+  menuitem: HTMLElement;
+  meta: HTMLMetaElement;
+  meter: HTMLMeterElement;
+  nav: HTMLElement;
+  object: HTMLObjectElement;
+  ol: HTMLOListElement;
+  optgroup: HTMLOptGroupElement;
+  option: HTMLOptionElement;
+  output: HTMLOutputElement;
+  p: HTMLParagraphElement;
+  param: HTMLParamElement;
+  pre: HTMLPreElement;
+  progress: HTMLProgressElement;
+  q: HTMLQuoteElement;
+  rb: HTMLElement;
+  rp: HTMLElement;
+  rt: HTMLElement;
+  rtc: HTMLElement;
+  ruby: HTMLElement;
+  s: HTMLElement;
+  samp: HTMLElement;
+  section: HTMLTableSectionElement;
+  select: HTMLSelectElement;
+  small: HTMLElement;
+  source: HTMLSourceElement;
+  span: HTMLElement;
+  strong: HTMLElement;
+  sub: HTMLElement;
+  summary: HTMLElement;
+  sup: HTMLElement;
+  table: HTMLTableElement;
+  tbody: HTMLElement;
+  td: HTMLElement;
+  template: HTMLTemplateElement;
+  textarea: HTMLTextAreaElement;
+  tfoot: HTMLElement;
+  th: HTMLElement;
+  thead: HTMLElement;
+  time: HTMLTimeElement;
+  title: HTMLTitleElement;
+  tr: HTMLTableRowElement;
+  track: HTMLElement;
+  u: HTMLElement;
+  ul: HTMLUListElement;
+  video: HTMLVideoElement;
+  wbr: HTMLElement;
+};
+
+export type TagParams<
+  TagName extends keyof TagNameToTagType,
+  Tag = TagNameToTagType[TagName]
+> = Partial<{
+  [key in WritableKeys<Tag>]: Tag[key];
+}>;
+

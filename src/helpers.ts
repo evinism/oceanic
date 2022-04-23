@@ -1,4 +1,4 @@
-import { frag } from "./elements";
+import { frag } from "./frag";
 import {
   PermissiveChild,
   PermissiveChildren,

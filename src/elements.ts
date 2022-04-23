@@ -1,4 +1,5 @@
 import { unpermissifyOptional, unpermissifyChildren } from "./helpers";
+import { HtmlTag } from "./htmltypes";
 import {
   BlorpElementNode,
   PermissiveChildren,
@@ -6,7 +7,6 @@ import {
   StrictComponent,
   PermissiveOptional,
   BaseProps,
-  BlorpFragmentNode,
 } from "./types";
 
 type Args<PropTypes> =
@@ -16,7 +16,7 @@ type Args<PropTypes> =
 
 export const tag =
   <
-    TagDomain extends string = string,
+    TagDomain extends HtmlTag,
     PropTypes extends BaseProps = { [key: string]: any }
   >(
     tag: TagDomain
@@ -42,14 +42,3 @@ export const tag =
       props: props || {},
     };
   };
-
-export const frag = (
-  permissiveChildren: PermissiveChildren
-): BlorpFragmentNode => {
-  const children = unpermissifyChildren(permissiveChildren);
-  return {
-    _blorp: true,
-    type: "fragment",
-    children: children || [],
-  };
-};

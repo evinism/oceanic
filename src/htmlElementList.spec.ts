@@ -1,4 +1,4 @@
-import elements from "./htmlElementList";
+import * as elements from "./htmlElementList";
 import { render } from "./render";
 
 describe("elements", () => {
