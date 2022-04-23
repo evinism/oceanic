@@ -1,4 +1,4 @@
-import { tag } from "./elements";
+import { tag } from "./tag";
 
 /* Removed elements: var, head, body, html, script, style, title, link, noscript */
 /* There are likely others that are missed right now */

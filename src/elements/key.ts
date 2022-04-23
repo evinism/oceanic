@@ -1,5 +1,5 @@
-import { unpermissifyChild } from "./helpers";
-import { StrictComponent, PermissiveChild } from "./types";
+import { unpermissifyChild } from "../unpermissify";
+import { StrictComponent, PermissiveChild } from "../types";
 
 export const key = (
   keyname: string,

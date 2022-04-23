@@ -1,4 +1,4 @@
-import { unpermissifyChild } from "./helpers";
+import { unpermissifyChild } from "./unpermissify";
 import { BlorpContextNode, PermissiveChild } from "./types";
 
 export class Context<T = any> {

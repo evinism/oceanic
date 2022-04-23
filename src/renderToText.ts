@@ -1,5 +1,5 @@
 import { StrictComponent, BlorpNode, DomRepresentedProp, Hooks } from "./types";
-import { frag } from "./frag";
+import { frag } from "./elements/frag";
 
 const noop = () => {};
 

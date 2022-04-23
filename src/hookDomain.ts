@@ -1,5 +1,5 @@
 import { Context } from "./context";
-import { unpermissifyOptional } from "./helpers";
+import { unpermissifyOptional } from "./unpermissify";
 import { UseEffectHandler, UseStateHandler, Optional, Hooks } from "./types";
 
 export class HookDomain {

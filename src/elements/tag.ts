@@ -1,5 +1,5 @@
-import { unpermissifyOptional, unpermissifyChildren } from "./helpers";
-import { HtmlTag } from "./htmltypes";
+import { unpermissifyOptional, unpermissifyChildren } from "../unpermissify";
+import { HtmlTag } from "../htmltypes";
 import {
   BlorpElementNode,
   PermissiveChildren,
@@ -7,7 +7,7 @@ import {
   StrictComponent,
   PermissiveOptional,
   BaseProps,
-} from "./types";
+} from "../types";
 
 type Args<PropTypes> =
   | []

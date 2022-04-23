@@ -1,5 +1,5 @@
 import * as elements from "./htmlElementList";
-import { render } from "./render";
+import { render } from "../render";
 
 describe("elements", () => {
   describe("various tags", () => {

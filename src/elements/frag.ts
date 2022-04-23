@@ -1,5 +1,5 @@
-import { unpermissifyChildren } from "./helpers";
-import { BlorpFragmentNode, PermissiveChildren } from "./types";
+import { unpermissifyChildren } from "../unpermissify";
+import { BlorpFragmentNode, PermissiveChildren } from "../types";
 
 export const frag = (
   permissiveChildren: PermissiveChildren

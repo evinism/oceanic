@@ -1,6 +1,6 @@
 import { PermissiveChild } from "./types";
 import { RenderTree } from "./renderTree";
-import { unpermissifyChild } from "./helpers";
+import { unpermissifyChild } from "./unpermissify";
 
 const activeRenderTreeNodes = new Map<Element, RenderTree>();
 
