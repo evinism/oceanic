@@ -1,12 +1,11 @@
 import { unpermissifyOptional, unpermissifyChildren } from "../unpermissify";
-import { HtmlTag } from "../htmltypes";
+import { HtmlTag, TagParams } from "../htmltypes";
 import {
   BlorpElementNode,
   PermissiveChildren,
   Optional,
   StrictComponent,
   PermissiveOptional,
-  BaseProps,
 } from "../types";
 
 type Args<PropTypes> =
@@ -15,30 +14,25 @@ type Args<PropTypes> =
   | [PermissiveOptional<PropTypes>, PermissiveChildren];
 
 export const tag =
-  <
-    TagDomain extends HtmlTag,
-    PropTypes extends BaseProps = { [key: string]: any }
-  >(
-    tag: TagDomain
-  ) =>
-  (...args: Args<PropTypes>): BlorpElementNode => {
-    let props: Optional<PropTypes>;
-    let children: Optional<StrictComponent[]> = undefined;
-    if (args.length === 0) {
-      props = undefined;
-      children = undefined;
-    } else if (args.length === 1) {
-      props = undefined;
-      children = unpermissifyChildren(args[0]);
-    } else {
-      props = unpermissifyOptional(args[0]);
-      children = unpermissifyChildren(args[1]);
-    }
-    return {
-      _blorp: true,
-      type: "element",
-      tag,
-      children,
-      props: props || {},
-    };
-  };
+  <TagName extends HtmlTag>(tag: TagName) =>
+    (...args: Args<TagParams<TagName>>): BlorpElementNode => {
+      let props: Optional<TagParams<TagName>>;
+      let children: Optional<StrictComponent[]> = undefined;
+      if (args.length === 0) {
+        props = undefined;
+        children = undefined;
+      } else if (args.length === 1) {
+        props = undefined;
+        children = unpermissifyChildren(args[0]);
+      } else {
+        props = unpermissifyOptional(args[0]);
+        children = unpermissifyChildren(args[1]);
+      }
+      return {
+        _blorp: true,
+        type: "element",
+        tag,
+        children,
+        props: props || {},
+      };
+    };;;;

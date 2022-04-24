@@ -215,10 +215,15 @@ type TagNameToTagType = {
   wbr: HTMLElement;
 };
 
-export type TagParams<
-  TagName extends keyof TagNameToTagType,
-  Tag = TagNameToTagType[TagName]
-> = Partial<{
-  [key in WritableKeys<Tag>]: Tag[key];
+/*
+export type TagParams<T> = {
+  [key in WritableKeys<HTMLElement>]?: HTMLElement[key];
+};
+*/
+
+export type TagParams<TagName extends keyof TagNameToTagType> = Partial<{
+  [key in WritableKeys<
+    TagNameToTagType[TagName]
+  >]: TagNameToTagType[TagName][key];
 }>;
 

@@ -12,24 +12,6 @@ export type PermissiveChildren = PermissiveOptional<
   PermissiveChild[] | PermissiveChild
 >;
 
-// --- Element types ---
-export type DomRepresentedProp =
-  | "id"
-  | "class"
-  | "value"
-  | "checked"
-  | "selected"
-  | "disabled"
-  | "readonly"
-  | "hidden"
-  | "tabindex";
-
-export interface BaseProps {}
-
-export type BasicElementProps = {
-  [key in DomRepresentedProp]?: string | boolean | number;
-} & BaseProps;
-
 // --- Blorp Node and Constructor types ---
 export interface Hooks {
   rerender: () => void;

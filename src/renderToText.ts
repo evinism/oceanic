@@ -1,4 +1,4 @@
-import { StrictComponent, BlorpNode, DomRepresentedProp, Hooks } from "./types";
+import { StrictComponent, BlorpNode, Hooks } from "./types";
 import { frag } from "./elements/frag";
 
 const noop = () => {};
@@ -58,7 +58,7 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
       html = `<${node.tag}`;
       for (let key in node.props) {
         if (domRepresentedProps.indexOf(key) !== -1) {
-          const value = node.props[key as DomRepresentedProp];
+          const value = node.props[key as string];
           if (value !== undefined) {
             html += ` ${key}=${renderAttrValue(value)}`;
           }

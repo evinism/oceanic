@@ -8,14 +8,7 @@ import {
   frag,
   key,
   createContext,
-  button,
 } from "./blorp";
-
-button({
-  onclick: () => {
-    console.log("clicked");
-  },
-});
 
 
 const html = (data: string) =>
