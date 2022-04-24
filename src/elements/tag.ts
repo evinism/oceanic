@@ -15,15 +15,12 @@ type Args<PropTypes> =
   | [PermissiveOptional<PropTypes>, PermissiveChildren];
 
 // This is a dangerous function.
-export const isPermissiveChildrenOrFunction = (
+export const isPermissiveChildrenOrFunctionOrArray = (
   children: unknown
-): children is PermissiveChildren | Function => {
+): children is PermissiveChildren | Function | Array<unknown> => {
   if (!children) {
     return false;
-  } else if (
-    Array.isArray(children) &&
-    children.every(isPermissiveChildrenOrFunction)
-  ) {
+  } else if (Array.isArray(children)) {
     return true;
   } else if ((children as any)._blorp) {
     return true;
@@ -45,7 +42,7 @@ export const tag =
       children = undefined;
     } else if (args.length === 1) {
       const arg = args[0];
-      if (isPermissiveChildrenOrFunction(arg)) {
+      if (isPermissiveChildrenOrFunctionOrArray(arg)) {
         props = undefined;
         children = unpermissifyChildren(arg);
       } else {

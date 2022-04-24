@@ -103,13 +103,9 @@ export class RenderTree {
       text(node.text);
     } else if (node.type === "element") {
       const props = Object.entries(node.props).flat();
-      if (node.children) {
-        elementOpen(node.tag, "", [], ...props);
-        this._renderNodeChildren(node.children, renderTreeNode);
-        elementClose(node.tag);
-      } else {
-        elementVoid(node.tag, "", null, props);
-      }
+      elementOpen(node.tag, "", [], ...props);
+      node.children && this._renderNodeChildren(node.children, renderTreeNode);
+      elementClose(node.tag);
     } else if (node.type === "fragment") {
       this._renderNodeChildren(node.children, renderTreeNode);
     } else if (node.type === "context") {
