@@ -108,4 +108,3 @@ export const u = tag("u" as const);
 export const ul = tag("ul" as const);
 export const video = tag("video" as const);
 export const wbr = tag("wbr" as const);
-
