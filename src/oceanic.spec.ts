@@ -13,7 +13,7 @@ import {
 const html = (data: string) =>
   data.trim().replace(/\s+/g, " ").replace(/\s+</g, "<").replace(/>\s+/g, ">");
 
-describe("blorp", () => {
+describe("oceanic", () => {
   describe("#renderToText", () => {
     it("should return a string", () => {
       assert(typeof renderToText(div()) === "string");

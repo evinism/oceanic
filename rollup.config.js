@@ -8,7 +8,7 @@ export default {
   output: {
     file: "dist/umd/index.js",
     format: "umd",
-    name: "blorp",
+    name: "oceanic",
   },
   plugins: [nodeResolve(), commonjs(), terser(), analyze()],
 };

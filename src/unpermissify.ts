@@ -4,10 +4,10 @@ import {
   PermissiveChildren,
   Optional,
   PermissiveOptional,
-  BlorpNode,
+  OceanicNode,
   StrictComponent,
   PermissiveNode,
-  BlorpFragmentNode,
+  OceanicFragmentNode,
 } from "./types";
 
 export function unpermissifyOptional<T>(
@@ -25,11 +25,11 @@ export function unpermissifyOptional<T>(
 
 export const unpermissifyNode = (
   permissiveNode: PermissiveNode
-): Optional<BlorpNode> => {
-  let strictNode: Optional<BlorpNode>;
+): Optional<OceanicNode> => {
+  let strictNode: Optional<OceanicNode>;
   if (typeof permissiveNode === "string") {
     strictNode = {
-      _blorp: true,
+      _oceanic: true,
       type: "text",
       text: permissiveNode,
     };
@@ -49,8 +49,8 @@ export function unpermissifyChild(
       const res = bound(hooks);
       if (typeof res === "function") {
         // If we get a function back, we wrap it in a fragment
-        const fragRes: BlorpFragmentNode = {
-          _blorp: true,
+        const fragRes: OceanicFragmentNode = {
+          _oceanic: true,
           type: "fragment",
           children: unpermissifyChildren(res)!,
         };

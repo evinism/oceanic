@@ -1,6 +1,6 @@
 export { tag } from "./elements/tag";
 export { frag } from "./elements/frag";
-export { BlorpNode, Component } from "./types";
+export { OceanicNode, Component } from "./types";
 export { renderToText } from "./renderToText";
 export { render } from "./render";
 export { key } from "./elements/key";

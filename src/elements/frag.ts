@@ -1,12 +1,12 @@
 import { unpermissifyChildren } from "../unpermissify";
-import { BlorpFragmentNode, PermissiveChildren } from "../types";
+import { OceanicFragmentNode, PermissiveChildren } from "../types";
 
 export const frag = (
   permissiveChildren: PermissiveChildren
-): BlorpFragmentNode => {
+): OceanicFragmentNode => {
   const children = unpermissifyChildren(permissiveChildren);
   return {
-    _blorp: true,
+    _oceanic: true,
     type: "fragment",
     children: children || [],
   };

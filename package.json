@@ -1,7 +1,7 @@
 {
-  "name": "blorp",
-  "version": "0.0.3",
-  "description": "Small but mighty UI library. Proto version",
+  "name": "oceanic",
+  "version": "0.0.1",
+  "description": "Small but mighty UI library.",
   "author": "Evin Sellin",
   "license": "MIT",
   "main": "dist/umd/index.js",

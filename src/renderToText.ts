@@ -1,9 +1,9 @@
-import { StrictComponent, BlorpNode, Hooks } from "./types";
+import { StrictComponent, OceanicNode, Hooks } from "./types";
 import { frag } from "./elements/frag";
 
 const noop = () => {};
 
-export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
+export function renderToText(node: (() => OceanicNode) | OceanicNode): string {
   const domRepresentedProps = [
     "id",
     "class",
@@ -27,7 +27,7 @@ export function renderToText(node: (() => BlorpNode) | BlorpNode): string {
     useContext: () => undefined as any, // Context should REALLY be propatagated through rendering.
   };
 
-  function renderNode(nodeConstructor: StrictComponent | BlorpNode) {
+  function renderNode(nodeConstructor: StrictComponent | OceanicNode) {
     const fn =
       typeof nodeConstructor === "function"
         ? nodeConstructor

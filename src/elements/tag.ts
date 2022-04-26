@@ -1,7 +1,7 @@
 import { unpermissifyOptional, unpermissifyChildren } from "../unpermissify";
 import { HtmlTag, TagParams } from "../htmltypes";
 import {
-  BlorpElementNode,
+  OceanicElementNode,
   PermissiveChildren,
   Optional,
   StrictComponent,
@@ -22,7 +22,7 @@ export const isPermissiveChildrenOrFunctionOrArray = (
     return false;
   } else if (Array.isArray(children)) {
     return true;
-  } else if ((children as any)._blorp) {
+  } else if ((children as any)._oceanic) {
     return true;
   } else if (typeof children === "function") {
     return true;
@@ -34,7 +34,7 @@ export const isPermissiveChildrenOrFunctionOrArray = (
 
 export const tag =
   <TagName extends HtmlTag>(tag: TagName) =>
-  (...args: Args<TagParams<TagName>>): BlorpElementNode => {
+  (...args: Args<TagParams<TagName>>): OceanicElementNode => {
     let props: Optional<TagParams<TagName>>;
     let children: Optional<StrictComponent[]> = undefined;
     if (args.length === 0) {
@@ -54,7 +54,7 @@ export const tag =
       children = unpermissifyChildren(args[1]);
     }
     return {
-      _blorp: true,
+      _oceanic: true,
       type: "element",
       tag,
       children,

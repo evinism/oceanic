@@ -1,5 +1,5 @@
 import { unpermissifyChild } from "./unpermissify";
-import { BlorpContextNode, PermissiveChild } from "./types";
+import { OceanicContextNode, PermissiveChild } from "./types";
 
 export class Context<T = any> {
   defaultValue: T;
@@ -8,9 +8,9 @@ export class Context<T = any> {
     this.defaultValue = defaultValue;
   }
 
-  provide(value: T, child: PermissiveChild): BlorpContextNode {
+  provide(value: T, child: PermissiveChild): OceanicContextNode {
     return {
-      _blorp: true,
+      _oceanic: true,
       type: "context",
       child: unpermissifyChild(child),
       value,

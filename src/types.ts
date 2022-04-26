@@ -6,13 +6,13 @@ export type Optional<T> = T | undefined;
 export type PermissiveOptional<T> = T | undefined | null | false | void;
 
 export type PermissiveChild = PermissiveOptional<
-  Component | BlorpNode | string
+  Component | OceanicNode | string
 >;
 export type PermissiveChildren = PermissiveOptional<
   PermissiveChild[] | PermissiveChild
 >;
 
-// --- Blorp Node and Constructor types ---
+// --- Oceanic Node and Constructor types ---
 export interface Hooks {
   rerender: () => void;
   useState: UseStateHandler;
@@ -20,7 +20,7 @@ export interface Hooks {
   useContext: UseContextHandler;
 }
 
-export type PermissiveNode = PermissiveOptional<BlorpNode | string>;
+export type PermissiveNode = PermissiveOptional<OceanicNode | string>;
 
 export type PermissiveComponent = ((
   hooks: Hooks
@@ -31,43 +31,43 @@ export type PermissiveComponent = ((
 // This name is only to be used externally
 export type Component = PermissiveComponent;
 
-export type StrictComponent = ((hooks: Hooks) => Optional<BlorpNode>) & {
+export type StrictComponent = ((hooks: Hooks) => Optional<OceanicNode>) & {
   key?: string;
 };
 
-export type BlorpElementNode = {
-  _blorp: true;
+export type OceanicElementNode = {
+  _oceanic: true;
   type: "element";
   tag: string;
   children: Optional<StrictComponent[]>;
   props: { [key: string]: any };
 };
 
-export type BlorpFragmentNode = {
-  _blorp: true;
+export type OceanicFragmentNode = {
+  _oceanic: true;
   type: "fragment";
   children: StrictComponent[];
 };
 
-export type BlorpContextNode = {
-  _blorp: true;
+export type OceanicContextNode = {
+  _oceanic: true;
   type: "context";
   child: StrictComponent;
   value: unknown;
   contextObject: Context<unknown>;
 };
 
-export type BlorpTextNode = {
-  _blorp: true;
+export type OceanicTextNode = {
+  _oceanic: true;
   type: "text";
   text: string;
 };
 
-export type BlorpNode =
-  | BlorpElementNode
-  | BlorpFragmentNode
-  | BlorpContextNode
-  | BlorpTextNode;
+export type OceanicNode =
+  | OceanicElementNode
+  | OceanicFragmentNode
+  | OceanicContextNode
+  | OceanicTextNode;
 
 // --- Hook types ---
 
