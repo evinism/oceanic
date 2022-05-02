@@ -2,6 +2,7 @@ import assert from "assert";
 import { html } from "./testhelpers";
 
 import { renderToText, div, span, frag } from ".";
+import { createContext } from "./context";
 
 describe("#renderToText", () => {
   it("should return a string", () => {
@@ -68,6 +69,61 @@ describe("#renderToText", () => {
     const expected = html(`
       <div id="foo">
         <div>count: 0</div>
+      </div>
+    `);
+    expect(actual).toBe(expected);
+  });
+
+  it("should render components with context", () => {
+    const context = createContext(501);
+
+    const element = context.provide(
+      502,
+      div({ id: "foo" }, ({ useContext }) => {
+        const value = useContext(context);
+        return div("count: " + value);
+      })
+    );
+    const actual = renderToText(element);
+    const expected = html(`
+      <div id="foo">
+        <div>count: 502</div>
+      </div>
+    `);
+    expect(actual).toBe(expected);
+  });
+  it("should render components with context", () => {
+    const context = createContext(501);
+    const element = div({ id: "foo" }, ({ useContext }) => {
+      const value = useContext(context);
+      return div("count: " + value);
+    });
+    const actual = renderToText(element);
+    const expected = html(`
+      <div id="foo">
+        <div>count: 501</div>
+      </div>
+    `);
+    expect(actual).toBe(expected);
+  });
+
+  it("should allow contexts to be overwritten", () => {
+    const context = createContext(501);
+    const element = context.provide(
+      502,
+      context.provide(
+        503,
+        div({ id: "foo" }, ({ useContext }) => {
+          const value = useContext(context);
+          return div("count: " + value);
+        })
+      )
+    );
+
+    const actual = renderToText(element);
+    const expected = html(`
+      <div id="foo">
+        <div>count: 503</div>
       </div>
     `);
     expect(actual).toBe(expected);
