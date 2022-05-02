@@ -4,7 +4,6 @@ import {
   text,
   elementOpen,
   elementClose,
-  elementVoid,
 } from "incremental-dom-evinism";
 import { HookDomain } from "./hookDomain";
 import { Context } from "./context";
