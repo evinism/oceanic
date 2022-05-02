@@ -29,6 +29,7 @@ function renderNode(
     useState: <T>(i: T) => [i, noop],
     useEffect: noop,
     useContext: (context) => contextMap.get(context) || context.defaultValue,
+    hook: noop as any, // TODO<< THIS NEEDS FIXING.
   };
 
   const fn =

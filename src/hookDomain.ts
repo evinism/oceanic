@@ -1,6 +1,25 @@
 import { Context } from "./context";
 import { unpermissifyOptional } from "./unpermissify";
-import { UseEffectHandler, UseStateHandler, Optional, Hooks } from "./types";
+import {
+  UseEffectHandler,
+  UseStateHandler,
+  Optional,
+  Hooks,
+  KernelHooks,
+  HookHandler,
+} from "./types";
+
+const hookFnConstructor: (kernelHooks: KernelHooks) => HookHandler =
+  (kernelHooks: KernelHooks) =>
+  (customHook, ...args) => {
+    return customHook(
+      {
+        ...kernelHooks,
+        hook: hookFnConstructor(kernelHooks),
+      },
+      ...args
+    );
+  };
 
 export class HookDomain {
   constructor() {
@@ -18,12 +37,18 @@ export class HookDomain {
     cb: (arg: Hooks) => unknown
   ) => {
     this._position = 0;
-    cb({
+    const kernelHooks: KernelHooks = {
       useState: this._useStateHandler(rerender),
       useEffect: this._useEffectHandler,
       useContext: this._useContextHandler(getContextVariable),
       rerender: rerender,
+    };
+
+    cb({
+      ...kernelHooks,
+      hook: hookFnConstructor(kernelHooks),
     });
+
     if (this._position !== this._hookOrder.length) {
       throw new Error("Hooks are not in the right position!");
     }

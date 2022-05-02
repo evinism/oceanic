@@ -12,9 +12,31 @@ export type PermissiveChildren = PermissiveOptional<
   PermissiveChild[] | PermissiveChild
 >;
 
+
+// Maybe we put this somewhere else
+type Arguments<Fn extends CustomHook<any, any>> =
+  Fn extends (context: Hooks, ...args: infer T) => any ? T : never;
+export type HookHandler = <
+  HookFn extends (context: Hooks, ...args: any[]) => any
+>(
+  hookFn: HookFn,
+  ...args: Arguments<HookFn>
+) => ReturnType<HookFn>;
+
+export type CustomHook<T extends Array<unknown>, R> = (context: Hooks, ...args: T) => R;
+
 // --- Oceanic Node and Constructor types ---
+// Should probably be an internal type
+export interface KernelHooks {
+  rerender: () => void;
+  useState: UseStateHandler;
+  useEffect: UseEffectHandler;
+  useContext: UseContextHandler;
+}
+
 export interface Hooks {
   rerender: () => void;
+  hook: HookHandler;
   useState: UseStateHandler;
   useEffect: UseEffectHandler;
   useContext: UseContextHandler;
